@@ -28,17 +28,17 @@
             <button onclick="onSend()">Send</button>
             <div>
                 <p></p>
-                <textarea id="data" rows="8" placeholder="data"></textarea>
+                <textarea id="send_data" rows="8" placeholder="data"></textarea>
             </div>
             <div
                 id="response"
-                style="position: fixed; width: 300px; right: 0px; bottom: 20px"
+                style="position: fixed; width: 100%; left: 0px; bottom: 20px; padding: 10px"
             >
                 <p>
                     <button onclick="w3.hide('#res')">hide</button
                     ><button onclick="w3.show('#res')">show</button>
                 </p>
-                <textarea id="res" style="width: 80%; min-height: 200px">
+                <textarea id="res" style="width: 90%; min-height: 200px">
                 </textarea>
             </div>
         </div>
@@ -52,7 +52,7 @@
         const coinInput = document.getElementById('coin')
         const sender = document.getElementById('sender')
         const receiver = document.getElementById('receiver')
-        const data = document.getElementById('data')
+        const send_data = document.getElementById('send_data')
         const resDiv = document.getElementById('res')
         const nameInput = document.getElementById('name')
         const passInput = document.getElementById('pass')
@@ -68,7 +68,7 @@
         function onSend() {
             const url = `/send?value=${coinInput.value}&sender=${
                 sender.value
-            }&receiver=${receiver.value}&data=${JSON.stringify(data)}`
+            }&receiver=${receiver.value}&data=${JSON.stringify(send_data.value)}`
             fetch(url)
                 .then((res) => res.text())
                 .then((data) => {

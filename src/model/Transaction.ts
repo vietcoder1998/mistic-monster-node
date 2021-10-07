@@ -20,7 +20,7 @@ export default class Transaction extends Block {
         sender: string,
         receiver: string
     ) {
-        super(data, lastHash, rule)
+        super(lastHash, data, rule)
         this.sender = sender
         this.receiver = receiver
         this.type = type
@@ -28,5 +28,6 @@ export default class Transaction extends Block {
         this.unit = unit
         this.type = type
         this.createDate = new Date().getTime()
+        this.hash = this.genHash()
     }
 }

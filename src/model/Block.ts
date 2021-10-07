@@ -1,5 +1,4 @@
 import crypto from 'crypto-js'
-import Monster from './Monster'
 
 export default class Block {
     rule = 3
@@ -7,37 +6,35 @@ export default class Block {
     timeStamp = 0
     createdDate: number
     lastHash: string
-    hash: string
+    hash?: string
     data: string
 
     constructor(lastHash: string, data: string, rule?: number) {
         this.createdDate = new Date().getDate()
         this.lastHash = lastHash
-        this.hash = this.genHash()
         this.data = data
-
         if (rule) {
             this.rule = rule
         }
+        this.hash = this.genHash()
     }
 
-    // generate next Hash
-    genHash(): any {
-        const availableString: string =
-            this.lastHash +
-            String(this.createdDate) +
-            String(Math.floor(Math.random() + 10000))
+    // generate stri Hash
+    genHash() {
+        let hash
+        console.log('mining ...', this.rule)
+        while (1) {
+            const availableString: string =
+                this.lastHash + String(Math.floor(Math.random() * 1000000))
 
-        const hash = crypto.AES.encrypt(
-            availableString,
-            'axies_copy'
-        ).toString()
+            hash = crypto.AES.encrypt(availableString, 'axies_copy').toString()
 
-        console.log(hash)
-        if (this.isValidHash(hash)) {
-            this.isMining = false
-            return hash
+            if (this.isValidHash(hash)) {
+                return hash
+            }
         }
+
+        return hash
     }
 
     // setRule

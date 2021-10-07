@@ -15,7 +15,7 @@ export default class TestNet {
 
     // init()
     async init() {
-        ;[0, 1, 2]
+        Array(0, 1, 2)
             .map((e) => BaseAddress.Wallet + e)
             .forEach((address: string, index: number) => {
                 const bank = new Wallet(
@@ -39,7 +39,7 @@ export default class TestNet {
     // register wallet
     async registerWallet(name: string, pass: string) {
         const wallet: Wallet = new Wallet(name, pass)
-        Object.assign(this.wallets, wallet)
+        Object.assign(this.wallets, { [wallet.address]: wallet })
         const address = wallet.createAddress(WalletType.USER)
         if (wallet) {
             return address
@@ -61,7 +61,7 @@ export default class TestNet {
             value,
             unit,
             TransactionType.Transfer,
-            5
+            3
         )
         return transaction
     }

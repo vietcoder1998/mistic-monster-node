@@ -1,5 +1,4 @@
 import { CoinUnit, TransactionType } from '../enums/type'
-import Block from './Block'
 import Monster from './Monster'
 import Transaction from './Transaction'
 
@@ -25,17 +24,17 @@ export default class BlockChain {
         const transaction = new Transaction(
             data,
             this.getLastHash(),
-            rule,
             value,
+            rule,
             type,
             unit,
             sender,
             receiver
         )
-        const validate = this.validate()
 
-        if (validate) {
+        if (this.validate()) {
             this.transactions.push(transaction)
+            console.log('oke, success')
         }
 
         return transaction

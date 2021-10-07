@@ -1,9 +1,6 @@
 import { BaseAddress } from '../enums/address'
 import { WalletType } from '../enums/type'
 
-/**
- *
- */
 export default class Wallet {
     monsterHash: string[] = []
     value: number = 0
