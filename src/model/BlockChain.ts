@@ -3,7 +3,7 @@ import Block from './Block'
 import Monster from './Monster'
 import Transaction from './Transaction'
 
-export default class Blockchain {
+export default class BlockChain {
     transactions: Transaction[] = []
     private name: string
     private createAt: number = new Date().getDate()
@@ -22,7 +22,7 @@ export default class Blockchain {
         type: TransactionType,
         rule?: number
     ) {
-        const trans = new Transaction(
+        const transaction = new Transaction(
             data,
             this.getLastHash(),
             rule,
@@ -33,9 +33,12 @@ export default class Blockchain {
             receiver
         )
         const validate = this.validate()
+
         if (validate) {
-            this.transactions.push(trans)
+            this.transactions.push(transaction)
         }
+
+        return transaction
     }
 
     // check validate hash

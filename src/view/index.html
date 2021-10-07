@@ -11,13 +11,20 @@
         <p>Create Transaction</p>
         <div>
             <input name="coin" type="number" id="coin" placeholder="coin" />
-            <input name="sender" type="text" id="sender" placeholder="sender" />
-            <input
+            <select
+                name="sender"
+                type="text"
+                id="sender"
+                placeholder="sender"
+                style="width: 200px"
+            ></select>
+            <select
                 name="receiver"
                 type="text"
                 id="receiver"
                 placeholder="receiver"
-            />
+                style="width: 200px"
+            ></select>
             <button onclick="onSend()">Send</button>
             <div>
                 <p></p>
@@ -25,7 +32,7 @@
             </div>
             <div
                 id="response"
-                style="position: fixed; width: 400px; right: 0px; bottom: 20px"
+                style="position: fixed; width: 300px; right: 0px; bottom: 20px"
             >
                 <p>
                     <button onclick="w3.hide('#res')">hide</button
@@ -39,10 +46,6 @@
             Wallet
             <button onclick="onGetAllWallet()">refresh</button>
         </p>
-        <div>
-            <label> Address </label>
-            <select id="address-select"></select>
-        </div>
     </body>
     <script>
         // html element
@@ -101,9 +104,10 @@
             fetch(url)
                 .then((res) => res.text())
                 .then((data) => {
-                    Object.keys(JSON.parse(data)).forEach((k) => {
-                        console.log(k)
-                        select.appendChild(new Option(k))
+                    const nData = JSON.parse(data)
+                    Object.keys(nData).forEach((k) => {
+                        receiver.appendChild(new Option(k))
+                        sender.appendChild(new Option(k))
                     })
                     resDiv.innerText = data
                 })
@@ -113,7 +117,7 @@
                 })
         }
 
-        function onGetAllWalletWithAddress(address) {
+        function onGetWithAddress(address) {
             const url = `/wallet?address=${address}`
             fetch(url)
                 .then((res) => res.text())

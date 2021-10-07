@@ -1,28 +1,30 @@
 import express from 'express'
 import path from 'path'
-import MainApi from './mainnet'
+import { CoinUnit } from './enums/type'
 import Wallet from './model/Wallet'
+import TestNet from './testnet'
 const app = express()
 const port = 8092
 
 // send transaction
 
-const mainnet = new MainApi()
+const testnet = new TestNet()
 app.get('/send', async (req, res) => {
-    const { value, sender, receiver, data } = req.query
-    const sendWallet: Wallet = await mainnet.getWallet(String(sender))
-    const receivedWallet: Wallet = await mainnet.getWallet(String(sender))
+    const { value, sender, receiver, data, unit } = req.query
+    const sendWallet: Wallet = await testnet.getWalletDetail(String(sender))
+    const receivedWallet: Wallet = await testnet.getWalletDetail(String(sender))
 
     if (!sendWallet) {
         res.status(404).end('No send wallet fonded')
     } else if (!receivedWallet) {
         res.status(404).end('No receiver wallet fonded')
     } else {
-        const transaction = await mainnet.createTransaction(
+        const transaction = await testnet.createTransaction(
             String(sender),
             String(receiver),
+            String(data),
             Number(value),
-            data
+            CoinUnit.DgCoin
         )
 
         res.status(200).end(JSON.stringify(transaction))
@@ -32,7 +34,7 @@ app.get('/send', async (req, res) => {
 // register wallet
 app.get('/register', async (req, res) => {
     const { name, pass } = req.query
-    const result = await mainnet.registerWallet(String(name), String(pass))
+    const result = await testnet.registerWallet(String(name), String(pass))
 
     if (result) {
         res.status(200).send(result)
@@ -45,7 +47,9 @@ app.get('/register', async (req, res) => {
 app.get('/wallet/:address', async (req, res) => {
     const { address } = req.params
     if (address) {
-        const walletDetail: Wallet = await mainnet.getWallet(String(address))
+        const walletDetail: Wallet = await testnet.getWalletDetail(
+            String(address)
+        )
 
         if (!walletDetail || walletDetail.pass) {
             res.status(404).send('no wallet found')
@@ -53,6 +57,11 @@ app.get('/wallet/:address', async (req, res) => {
             res.send(walletDetail)
         }
     }
+})
+
+app.get('/wallet', async (req, res) => {
+    const wallets = await testnet.getWalletList()
+    res.send(wallets)
 })
 
 app.get('/', (req, res) => {

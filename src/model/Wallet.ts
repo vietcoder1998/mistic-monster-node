@@ -1,5 +1,5 @@
-import { BaseAddress } from "../enums/address"
-import { WalletType } from "../enums/type"
+import { BaseAddress } from '../enums/address'
+import { WalletType } from '../enums/type'
 
 /**
  *
