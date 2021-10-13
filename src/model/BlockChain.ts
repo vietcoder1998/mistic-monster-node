@@ -1,9 +1,9 @@
 import { CoinUnit, TransactionType } from '../enums/type'
-import Monster from './Monster'
+import Block from './Block'
 import Transaction from './Transaction'
 
 export default class BlockChain {
-    transactions: Transaction[] = []
+    private transactions: Transaction[] = []
     private name: string
     private createAt: number = new Date().getDate()
     private author: string = 'tran_duy_viet'
@@ -12,32 +12,61 @@ export default class BlockChain {
         this.name = name
     }
 
-    appendNew(
-        data: Monster | any,
-        sender: string,
-        receiver: string,
+    get _total(): number {
+        return this.transactions.length
+    }
+
+    get _last_hash() {
+        if (this.transactions.length === 0) {
+            return ''
+        } else return this.transactions[this.transactions.length - 1].hash
+    }
+
+    get _create_date() {
+        return this.createAt
+    }
+
+    get _author(): string {
+        return this.author
+    }
+
+    get _name(): string {
+        return this.name
+    }
+
+    get _last_transaction() {
+        if (this.transactions.length === 0) {
+            return undefined
+        } else {
+            return this.transactions[this.transactions.length - 1]
+        }
+    }
+
+    get _transactions() {
+        return this.transactions
+    }
+
+    append(
+        data: string,
+        from: string,
+        to: string,
         value: number,
         unit: CoinUnit,
         type: TransactionType,
-        rule?: number
     ) {
         const transaction = new Transaction(
+            this._last_hash,
             data,
-            this.getLastHash(),
+            from,
+            to,
             value,
-            rule,
             type,
             unit,
-            sender,
-            receiver
         )
 
         if (this.validate()) {
             this.transactions.push(transaction)
-            console.log('oke, success')
         }
-
-        return transaction
     }
 
     // check validate hash
@@ -49,7 +78,7 @@ export default class BlockChain {
                 var block = this.transactions[i]
                 var nextBlock = this.transactions[i + 1]
                 var nextHash = nextBlock.hash
-                var compareHash = block.genHash()
+                var compareHash = block.gen_hash()
 
                 if (compareHash === nextHash) {
                     isTruth = false
@@ -61,29 +90,11 @@ export default class BlockChain {
         return isTruth
     }
 
-    getLastHash() {
-        if (this.transactions.length === 0) {
-            return ''
-        } else return this.transactions[this.transactions.length - 1].hash
-    }
-
-    getDate() {
-        return this.createAt
-    }
-
-    getAuth(): string {
-        return this.author
-    }
-
-    getName(): string {
-        return this.name
-    }
-
-    getLastTransaction() {
-        if (this.transactions.length === 0) {
-            return undefined
-        } else {
-            return this.transactions[this.transactions.length - 1]
-        }
+    query(page?: number, size?: number) {
+        const start = page | 0
+        const end = (start === 0 ? 1 : start) * (size | 10)
+        return this.transactions.filter(
+            (v: Block, i: number) => start <= i && i < end
+        )
     }
 }

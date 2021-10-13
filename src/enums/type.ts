@@ -4,14 +4,9 @@ export enum MonsterType {
     BEAST = 'beast',
 }
 
-export enum WalletType {
+export enum AccountType {
     BANKER = 'banker',
     USER = 'user',
-}
-
-export enum TransactionType {
-    MINING = 'mining',
-    BUYING = 'buying'
 }
 
 export enum BaseWallet {
@@ -20,8 +15,9 @@ export enum BaseWallet {
 }
 
 export enum CoinUnit {
-    Monster = 'mmc',
-    DgCoin = 'dgc'
+    Monster = 'MMC',
+    DgCoin = 'DGC',
+    Dollar = 'USD',
 }
 
 export enum TransactionType {

@@ -1,40 +1,81 @@
-import { MonsterType } from '../enums/type'
-
-const pet = [MonsterType.BEAST, MonsterType.BIRD, MonsterType.REPTILE]
+import {
+    MonsterAbility,
+    MonsterBodyPart,
+    MonsterClass,
+    MonsterShortInfo,
+    MonsterStats,
+    SaleInfo,
+} from '../entity/monster'
 
 export default class Monster {
-    from: string
-    type: MonsterType
-    name: string = 'test'
-    dmg: number = 10
-    def: number = 2
-    spe: number = 60
-    health: number = 80
-    hash: string = '23dfd_id_adf_sf_id_fng'
+    id: string = ''
+    name: string = ''
+    img: string = ''
+    owner: string = ''
+    level: number
+    birth_day: number
+    value: number
+    gene: string
+    stats: MonsterStats
+    class: MonsterClass
+    abilities: MonsterAbility[]
+    body: MonsterBodyPart[] = []
+    children?: MonsterShortInfo[] = []
+    parent?: MonsterShortInfo[] = []
+    breedCount: number = 0
 
     constructor(
-        from?: string,
-        type?: MonsterType,
-        name?: string,
-        dmg?: number,
-        def?: number
+        id: string,
+        name: string,
+        img: string,
+        owner: string,
+        parent?: MonsterShortInfo[],
+        stats?: MonsterStats
     ) {
-        this.from = from || 'earth'
-        this.type = type || this.randomPet()
-        this.name = name || 'ooooo'
-        this.dmg = dmg || this.randomDmg()
-        this.def = def || this.randomDef()
+        this.id = id
+        this.name = name
+        this.img = img
+        this.owner = owner
+        this.birth_day = new Date().getTime()
+
+        console.log('o ->', owner)
+
+        if (parent) {
+            this.parent = parent
+            const gene1 = parent[0].gene
+            const gene2 = parent[1].gene
+            this.gene =
+                '0x' + gene1
+                    ? gene1.substring(0, gene1.length - 1)
+                    : this.make_random_gene(64) + gene2
+                    ? gene2.substring(0, gene2.length - 1)
+                    : this.make_random_gene(64)
+        } else {
+            this.gene = this.make_random_gene(128)
+        }
+
+        if (stats) {
+            this.stats = stats
+        }
     }
 
-    randomPet(): MonsterType {
-        return pet[Math.floor(Math.random() * pet.length)]
+    make_random_gene(length: number) {
+        let gene = ''
+        const nuclear_ot = ['a', 't', 'g', 'x']
+
+        for (let i = 0; i < length; i++) {
+            const element = nuclear_ot[Math.floor(Math.random() * 4)]
+            gene += element
+        }
+
+        return gene
     }
 
-    randomDmg() {
-        return Math.floor(Math.random() * 10 + 10)
+    get _sale_info(): SaleInfo {
+        return this._sale_info
     }
 
-    randomDef() {
-        return Math.floor(Math.random() * 10 + 10)
+    set _sale_info(_info: SaleInfo) {
+        this._sale_info = _info
     }
 }

@@ -1,33 +1,31 @@
 import { CoinUnit, TransactionType } from '../enums/type'
 import Block from './Block'
 
-export default class Transaction extends Block {
-    block: Block
+class Transaction extends Block {
     type: TransactionType
-    sender: string
-    receiver: string
-    createDate: number
+    from: string
+    to: string
     value: number
     unit: CoinUnit
 
     constructor(
+        last_hash: string,
         data: any,
-        lastHash: string,
+        from: string,
+        to: string,
         value: number,
-        rule: number,
         type: TransactionType,
-        unit: CoinUnit,
-        sender: string,
-        receiver: string
+        unit: CoinUnit
     ) {
-        super(lastHash, data, rule)
-        this.sender = sender
-        this.receiver = receiver
-        this.type = type
+        super(last_hash, data)
         this.value = value
+        this.from = from
+        this.to = to
         this.unit = unit
         this.type = type
-        this.createDate = new Date().getTime()
-        this.hash = this.genHash()
+        this.hash = this.gen_hash()
+        this.create_at = new Date().getTime()
     }
 }
+
+export default Transaction

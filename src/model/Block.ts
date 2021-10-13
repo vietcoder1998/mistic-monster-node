@@ -2,35 +2,34 @@ import crypto from 'crypto-js'
 
 export default class Block {
     rule = 3
-    isMining = true
-    timeStamp = 0
-    createdDate: number
-    lastHash: string
+    time_stamp = 0
+    create_at: number
+    last_hash: string
     hash?: string
     data: string
 
-    constructor(lastHash: string, data: string, rule?: number) {
-        this.createdDate = new Date().getDate()
-        this.lastHash = lastHash
+    constructor(last_hash: string, data: string) {
         this.data = data
-        if (rule) {
-            this.rule = rule
-        }
-        this.hash = this.genHash()
+        this.last_hash = last_hash.substring(0, -6)
+        this.hash = this.gen_hash()
     }
 
-    // generate stri Hash
-    genHash() {
+    // generate hash
+    gen_hash() {
         let hash
-        console.log('mining ...', this.rule)
-        while (1) {
+        let invalid = true
+        while (invalid) {
             const availableString: string =
-                this.lastHash + String(Math.floor(Math.random() * 1000000))
+                this.last_hash +
+                String(1000000 + Math.floor(Math.random() * 8999999))
 
-            hash = crypto.AES.encrypt(availableString, 'axies_copy').toString()
+            hash = crypto.AES.encrypt(
+                availableString.substring(0, -6),
+                'mistic_monster'
+            ).toString()
 
-            if (this.isValidHash(hash)) {
-                return hash
+            if (this.is_valid_hash(hash)) {
+                invalid = false
             }
         }
 
@@ -38,12 +37,12 @@ export default class Block {
     }
 
     // setRule
-    setRule(rule: number) {
+    set _rule(rule: number) {
         this.rule = rule
     }
 
     // check rule of block
-    isValidHash(hash: string) {
+    is_valid_hash(hash: string) {
         if (hash) {
             let count = 0
             for (let i = 0; i < hash.length - 1; i++) {
@@ -53,6 +52,7 @@ export default class Block {
             }
 
             if (count === this.rule) {
+                this.time_stamp = count
                 return true
             }
         }

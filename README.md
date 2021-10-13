@@ -7,8 +7,8 @@
     - User mining and give their Coin ( block )
     - User give another user money -> Transaction ( block )
     - User have Wallet, that have 2 thing:
-        + Their Transaction -> saving all their transaction ( send - receiver - coin)
-        + Their Coin -> saving all their coin, receiver 
+        + Their Transaction -> saving all their transaction ( send - to - coin)
+        + Their Coin -> saving all their coin, to 
 
             | mining | ->  | mining |  ->  | mining |  ->  | mining |
                 |               /

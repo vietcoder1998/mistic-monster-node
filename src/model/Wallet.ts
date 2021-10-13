@@ -1,77 +1,53 @@
-import { BaseAddress } from '../enums/address'
-import { WalletType } from '../enums/type'
+import Account from './Account'
 
 export default class Wallet {
-    monsterHash: string[] = []
-    value: number = 0
-    address?: string = ''
-    name: string = ''
-    baseAddress: string = ''
-    transactionHash: string[] = []
-    type: WalletType
-    createAt: string
-    pass: string = ''
+    private address: string
+    private password: string
+    private seed: string
+    private accounts: string[] = []
+    private transaction_hash: string[] = []
+    public create_at: number
 
-    constructor(
-        name?: string,
-        pass?: string,
-        address?: string,
-        value?: number,
-        type?: WalletType,
-        baseAddress?: string
-    ) {
-        if (address) {
-            this.address = this.address
-        }
-
-        if (pass) {
-            this.pass = pass
-        }
+    constructor(password: string, seed: string, address: string) {
         this.address = address
-        this.value = value
-        this.baseAddress = baseAddress
-        if (name) {
-            this.name = name
-        }
-
-        if (type) {
-            this.type = type
-        }
+        this.password = password
+        this.seed = seed
+        this.create_at = new Date().getTime()
     }
 
-    createAddress(type: WalletType): string {
-        this.address =
-            BaseAddress.Wallet + type + new Date().getTime() + this.makeId(12)
+    get _seed() {
+        return this.seed
+    }
+
+    get _address() {
         return this.address
     }
 
-    setPass(pass: string): void {
-        this.pass = pass
+    get _pass() {
+        return this.password
     }
 
-    addTransactionHash(hash: string) {
-        this.transactionHash.push(hash)
+    get _accounts() {
+        return this.accounts
     }
 
-    changeName(name: string) {
-        this.name = name
+    set _accounts(accounts: string[]) {
+        this.accounts = accounts
     }
 
-    getAddress(): string {
-        return this.address
+    get _transaction_hash() {
+        return this.transaction_hash
     }
 
-    makeId(length: number): string {
-        var result = ''
-        var characters =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-        var charactersLength = characters.length
+    set _transaction_hash(transaction_hash: string[]) {
+        this.transaction_hash = transaction_hash
+    }
 
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(
-                Math.floor(Math.random() * charactersLength)
-            )
-        }
-        return result
+    push_account(address: string) {
+        this.accounts.push(address)
+    }
+
+    push_transaction_hash(transaction_hash: string) {
+        this.accounts.push(transaction_hash)
     }
 }
