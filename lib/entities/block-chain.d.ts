@@ -1,6 +1,6 @@
 import { AccountType } from '../enums/type';
 import { Address } from '../utils/address';
-import { BlockInfo, NodeInfo, TransactionInfo } from '../typings';
+import { BlockInfo, NodeInfo, TransactionInfo } from '../typings/info';
 import { MonsterShortInfo } from '../typings/monster';
 import Account from './account';
 import Monster from './monster';

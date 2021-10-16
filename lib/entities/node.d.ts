@@ -1,5 +1,5 @@
 import { CoinUnit, TransactionType } from '../enums/type';
-import { BlockInfo } from '../typings';
+import { BlockInfo } from '../typings/info';
 declare class MMCNode {
     private id;
     private address;
