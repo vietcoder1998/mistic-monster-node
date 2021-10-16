@@ -65,13 +65,12 @@ ssh-add ~/.ssh/id_rsa_github
 echo "Finished"
 git status
 git add .
-git commit -m "[$auth] - $comment - $comment - $now"
+git commit -m "[$auth] - $comment - $comment"
 git push
 
 
 
 #end
-bash script/dev.sh
 echo -p 'Executed success, check in: '
 
 #~detroy
