@@ -66,7 +66,7 @@ echo "Finished"
 git status
 git add .
 git commit -m "[$auth] - $comment - $comment"
-git push
+sudo git push
 
 
 
