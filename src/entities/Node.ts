@@ -1,5 +1,5 @@
 import { CoinUnit, TransactionType } from '../enums/type'
-import { BlockInfo } from '../typings'
+import { BlockInfo } from '../typings/info'
 import Block from './block'
 import Transaction from './transaction'
 

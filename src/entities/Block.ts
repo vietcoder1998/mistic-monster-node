@@ -1,5 +1,5 @@
 import crypto from 'crypto-js'
-import { BlockInfo } from '../typings'
+import { BlockInfo } from '../typings/info'
 import Transaction from './transaction'
 
 export default class Block {

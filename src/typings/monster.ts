@@ -1,4 +1,4 @@
-import { CoinUnit, MonsterType } from '../enums/type'
+import { CoinUnit } from '../enums/type'
 
 interface MonsterStats {
     dmg: number
