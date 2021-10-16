@@ -53,4 +53,10 @@ export {
     NodeInfo,
     Result,
     TransferHistory,
+    BlockChain,
+    Block,
+    Node,
+    Response,
+    Account,
+    Wallet,
 }
