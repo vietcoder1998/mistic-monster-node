@@ -17,9 +17,9 @@
         "strictNullChecks": false,
         "strictFunctionTypes": false,
         "strictPropertyInitialization": false,
-        "noImplicitReturns": true
+        "noImplicitReturns": true,
     },
-    "include": ["src/**/*.ts", "src/*.ts"],
+    "include": ["src/**/*.ts"],
     "exclude": ["dist", "node_modules", "build"],
     "emitDecoratorMetadata": true
 }

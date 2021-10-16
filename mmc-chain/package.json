@@ -1,0 +1,28 @@
+{
+  "name": "mmc-chain",
+  "version": "1.0.0",
+  "description": "a block-chain compiler with javascript",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vietcoder1998/mmc-chain.git"
+  },
+  "keywords": [
+    "blockchain",
+    "js",
+    "fast",
+    "privacy"
+  ],
+  "author": "duyviet2841998@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vietcoder1998/mmc-chain/issues"
+  },
+  "homepage": "https://github.com/vietcoder1998/mmc-chain#readme"
+}
