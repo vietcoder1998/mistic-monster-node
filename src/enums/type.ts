@@ -9,11 +9,6 @@ export enum AccountType {
     USER = 'user',
 }
 
-export enum BaseWallet {
-    BANKER = 'mmc:00x-bank-',
-    USER = 'mmc:00x-user-'
-}
-
 export enum CoinUnit {
     Monster = 'MMC',
     DgCoin = 'DGC',

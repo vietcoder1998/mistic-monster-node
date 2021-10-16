@@ -1,6 +1,6 @@
 import crypto from 'crypto-js'
 import { BlockInfo } from '../typings'
-import Transaction from './Transaction'
+import Transaction from './transaction'
 
 export default class Block {
     private rule = 3

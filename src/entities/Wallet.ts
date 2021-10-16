@@ -1,4 +1,4 @@
-import Account from './Account'
+import Account from './account'
 
 class Wallet {
     private address: string

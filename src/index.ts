@@ -1,5 +1,11 @@
-import BlockChain from './entities/BlockChain'
-import MMCNode from './entities/Node'
-import Transaction from './entities/Transaction'
+import * as utils from './utils'
+import * as entities from './entities'
+import * as enums from './enums'
+import * as types from './typings'
 
-export { BlockChain, Transaction, MMCNode }
+export default {
+    utils,
+    entities,
+    enums,
+    types,
+}

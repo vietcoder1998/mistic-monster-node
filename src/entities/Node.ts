@@ -1,8 +1,7 @@
 import { CoinUnit, TransactionType } from '../enums/type'
 import { BlockInfo } from '../typings'
-import Block from './Block'
-import Monster from './Monster'
-import Transaction from './Transaction'
+import Block from './block'
+import Transaction from './transaction'
 
 class MMCNode {
     private id: number
