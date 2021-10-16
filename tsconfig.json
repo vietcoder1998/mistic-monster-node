@@ -5,7 +5,7 @@
         "module": "commonjs",
         "lib": ["es6"],
         "allowJs": true,
-        "outDir": "build",
+        "outDir": "mmc-chain/lib",
         "rootDir": "src",
         "strict": true,
         "noImplicitAny": true,
