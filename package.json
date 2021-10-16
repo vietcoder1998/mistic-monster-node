@@ -1,6 +1,6 @@
 {
   "name": "mmc-core-chain",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "1. Blockchain have: Coin - Wallet - Transaction     + Coin - that using for payment => Coin Block     + Transaction - that using for payment => Transaction Block 2. Process     - User mining and give their Coin ( block )     - User give another user money -> Transaction ( block )     - User have Wallet, that have 2 thing:         + Their Transaction -> saving all their transaction ( send - to - coin)         + Their Coin -> saving all their coin, to",
   "main": "index.js",
   "scripts": {
