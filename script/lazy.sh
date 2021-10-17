@@ -18,8 +18,10 @@ auth="viettd"
 
 # scripting
 echo -e "✨ Hello, well come to quick lazy deploy ✨" 
-echo -e "we are testing for it, "
-npm run test
+
+# build 
+echo -e "___ ready for build ___"
+npm run build
 
 echo -e "___  congratulation, next, add your commit ___"
 read -p "🕵️‍♂️ Add your comment >> " comment; echo -e " $CHECK_MARK $NC"
@@ -56,9 +58,7 @@ do
     sleep 1
 done
 
-# build 
-echo -e "___ ready for build ___"
-npm run build
+
 
 #end_
 # echo

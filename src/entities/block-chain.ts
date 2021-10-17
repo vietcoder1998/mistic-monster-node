@@ -21,55 +21,7 @@ export default class BlockChain {
     private author: string = 'abc'
     private blocks: BlockInfo[] = []
 
-    constructor() {
-        try {
-            const baseAddress = address(64)
-            const wallet = new Wallet(
-                'root123456',
-                bip39.generateMnemonic(),
-                baseAddress
-            )
-
-            Object.assign(this.wallets, { [baseAddress]: wallet })
-            Array(0, 1, 2).forEach((v: number) => {
-                const bank: Account = new Account(
-                    String(v),
-                    faker.name.findName(),
-                    AccountType.BANKER
-                )
-
-                bank._address = address(64)
-                bank.push_coin(CoinUnit.Monster, 10000)
-                this.accounts = { ...this.accounts, [bank._address]: bank }
-                this.wallets[baseAddress].push_account(bank._address)
-            })
-
-            console.log(this.accounts)
-
-            for (let i = 0; i < 10; i++) {
-                this.generate_monster(this._last_account._address)
-            }
-
-            const node1: NodeInfo = {
-                id: 1,
-                address: 'localhost',
-                port: 8093,
-                name: 'node_1',
-                transaction_length: 0,
-            }
-            const node2: NodeInfo = {
-                id: 2,
-                address: 'localhost',
-                port: 8093,
-                name: 'node_1',
-                transaction_length: 0,
-            }
-
-            this.nodes = { [node1.id]: node1, [node2.id]: node2 }
-        } catch (error) {
-            throw error
-        }
-    }
+    constructor() {}
 
     get _total_transaction(): number {
         return this.txs.length
