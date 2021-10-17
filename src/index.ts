@@ -4,6 +4,8 @@ import {
     random_id,
     generate_stats,
     address,
+    encode,
+    decode,
 } from './utils'
 import { BlockChain, Block, Node, Response, Account, Wallet } from './entities'
 import {
@@ -30,6 +32,7 @@ import {
     Result,
     TransferHistory,
 } from './typings'
+import { hgetAsync, hgetallAsync, hsetAsync, flushAsync } from './redis'
 
 export {
     query,
@@ -37,6 +40,8 @@ export {
     random_id,
     generate_stats,
     address,
+    encode,
+    decode,
     Store,
     MonsterType,
     AccountType,
@@ -63,4 +68,8 @@ export {
     Response,
     Account,
     Wallet,
+    hsetAsync,
+    hgetAsync,
+    hgetallAsync,
+    flushAsync,
 }
