@@ -57,7 +57,10 @@ export default class BlockChain {
     get_account_detail(address: string): Account;
     create_wallet(password: string, seed: string): Wallet;
     get_transaction_detail(hash: string): TransactionInfo[];
-    register_node(address: string, port: number, name: string, private_key?: string): string;
+    register_node(address: string, port: number, name: string, private_key?: string): {
+        msg: string;
+        code: string;
+    };
     add_block(block_info: BlockInfo): {};
     compare_transaction(len: number): number;
     get_object_size(obj: Object): number;

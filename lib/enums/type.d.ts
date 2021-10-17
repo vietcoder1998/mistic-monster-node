@@ -1,18 +1,19 @@
-export declare enum MonsterType {
+declare enum MonsterType {
     REPTILE = "reptile",
     BIRD = "bird",
     BEAST = "beast"
 }
-export declare enum AccountType {
+declare enum AccountType {
     BANKER = "banker",
     USER = "user"
 }
-export declare enum CoinUnit {
+declare enum CoinUnit {
     Monster = "MMC",
     DgCoin = "DGC",
     Dollar = "USD"
 }
-export declare enum TransactionType {
+declare enum TransactionType {
     Mining = "mining",
     Transfer = "transfer"
 }
+export { MonsterType, TransactionType, CoinUnit, AccountType };

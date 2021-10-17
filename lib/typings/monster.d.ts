@@ -5,6 +5,7 @@ interface MonsterStats {
     spe: number;
     skl: number;
     hea: number;
+    [key: string]: number | undefined;
 }
 declare type MonsterAbility = {
     name: string;

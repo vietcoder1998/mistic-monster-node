@@ -7,14 +7,13 @@ import {
 } from './utils'
 import { BlockChain, Block, Node, Response, Account, Wallet } from './entities'
 import {
-    ResponseMessage,
-    RedisStore,
     MonsterType,
     AccountType,
     CoinUnit,
     TransactionType,
     Code,
     Message,
+    Store,
 } from './enums'
 import {
     MonsterStats,
@@ -38,8 +37,7 @@ export {
     random_id,
     generate_stats,
     address,
-    ResponseMessage,
-    RedisStore,
+    Store,
     MonsterType,
     AccountType,
     CoinUnit,
