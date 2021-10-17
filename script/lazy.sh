@@ -76,7 +76,7 @@ git commit -m "[$auth] - $comment - $comment"
 sudo git push
 
 #end
-echo -p 'Push code success ! ... publish code '
+echo -e 'Push code success ! ... now you can see it and publish code '
 
 #~detroy
 unset sw comment_type now op0 op1 op2 next is_next fn
