@@ -1,4 +1,10 @@
-import { query, create_id, random_id, generate_stats, address } from './utils'
+import {
+    query,
+    create_stats,
+    random_id,
+    generate_stats,
+    address,
+} from './utils'
 import { BlockChain, Block, Node, Response, Account, Wallet } from './entities'
 import {
     ResponseMessage,
@@ -28,7 +34,7 @@ import {
 
 export {
     query,
-    create_id,
+    create_stats,
     random_id,
     generate_stats,
     address,

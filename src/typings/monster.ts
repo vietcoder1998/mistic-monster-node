@@ -6,6 +6,7 @@ interface MonsterStats {
     spe: number
     skl: number
     hea: number
+    [key: string]: number | undefined
 }
 
 type MonsterAbility = {
