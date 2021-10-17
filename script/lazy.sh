@@ -13,7 +13,6 @@ op1="feature "
 op2="hot-fix"
 sw="0"
 auth="viettd"
-link="http://210.86.231.152:3010/api-docs"
 
 # log first
 
@@ -55,12 +54,19 @@ do
     count=`expr $count - 1`
     sleep 1
 done
+
+# build 
+echo -e "___ ready for build ___"
+npm run build
+
 #end_
 # echo
 echo `Connect to server ...`
 sudo chmod 400 ~/.ssh/id_rsa_github
 eval `ssh-agent -s`
 sudo ssh-add ~/.ssh/id_rsa_github
+
+
 # deploy
 echo "Finished"
 git status
