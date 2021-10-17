@@ -21,3 +21,6 @@
     - There are 2 main block  -> One for Mining Coin
                               -> One for Mining Transaction
     - User will create Transaction that will be take money from block, and they 
+
+
+2. Test cmd mocha

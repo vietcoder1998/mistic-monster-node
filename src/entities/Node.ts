@@ -95,7 +95,7 @@ class MMCNode {
         data: string
     ) {
         const tx = new Transaction(this.id, from, to, value, type, unit, data)
-        this.blocks[this.blocks.length - 1].push_transaction(tx)
+        this.blocks[this.blocks.length - 1].push_transaction(tx._hash)
     }
 
     create_block() {

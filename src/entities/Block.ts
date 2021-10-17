@@ -7,7 +7,7 @@ export default class Block {
     private create_at: number
     private last_hash: string
     private hash?: string
-    private txs: Transaction[] = []
+    private txs: string[] = []
     private proof: number
     private id: number
     private node_id: number
@@ -47,12 +47,12 @@ export default class Block {
         }
     }
 
-    get _all_transaction_info() {
-        return this.txs.map((tx) => tx._info)
+    get _all_transaction_info(): string[] {
+        return this.txs.map((tx) => tx)
     }
 
-    push_transaction(tx: Transaction) {
-        this.txs.push(tx)
+    push_transaction(tx_hash: string) {
+        this.txs.push(tx_hash)
     }
 
     gen_hash(last_hash: string): { proof: number; hash: string } {

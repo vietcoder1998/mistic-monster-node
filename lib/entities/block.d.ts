@@ -1,5 +1,4 @@
 import { BlockInfo } from '../typings/info';
-import Transaction from './transaction';
 export default class Block {
     private rule;
     private create_at;
@@ -14,8 +13,8 @@ export default class Block {
     get _hash(): string;
     get _id(): number;
     get _info(): BlockInfo;
-    get _all_transaction_info(): import("../typings/info").TransactionInfo[];
-    push_transaction(tx: Transaction): void;
+    get _all_transaction_info(): string[];
+    push_transaction(tx_hash: string): void;
     gen_hash(last_hash: string): {
         proof: number;
         hash: string;

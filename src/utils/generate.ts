@@ -29,12 +29,18 @@ function generate_stats(
         hea: 20,
     }
 
-    Object.keys(stats_1).forEach((k: string) => {
-        Object.assign(
-            stats,
-            create_stats(k, min, range, stats_1[k], stats_2[k])
-        )
-    })
+    if (stats_1 && stats_2) {
+        Object.keys(stats_1).forEach((k: string) => {
+            Object.assign(
+                stats,
+                create_stats(k, min, range, stats_1[k], stats_2[k])
+            )
+        })
+    } else {
+        Object.keys(stats).forEach((k: string) => {
+            stats[k] = stats[k] + Math.floor(Math.random() * 10)
+        })
+    }
 
     return stats
 }

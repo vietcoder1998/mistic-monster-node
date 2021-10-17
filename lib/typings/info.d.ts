@@ -35,7 +35,7 @@ declare type BlockInfo = {
     create_at: number;
     last_hash: string;
     hash: string;
-    txs: TransactionInfo[];
+    txs: string[];
     proof: number;
     node_id: number;
 };
