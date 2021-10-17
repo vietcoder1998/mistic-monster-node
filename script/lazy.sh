@@ -23,6 +23,9 @@ echo -e "✨ Hello, well come to quick lazy deploy ✨"
 echo -e "___ ready for build ___"
 npm run build
 
+echo -e "___ test by mocha, thanks it ___"
+npm run test
+
 echo -e "___  congratulation, next, add your commit ___"
 read -p "🕵️‍♂️ Add your comment >> " comment; echo -e " $CHECK_MARK $NC"
 
@@ -46,8 +49,8 @@ esac
 echo -e "--> $comment_type $CHECK_MARK "
 
 now=$(date)
-echo "Your full comment is: [$auth]-$comment_type-$comment-$now"
-echo "𓀌𓀌 Ready for push "
+echo "Your full comment is: [$comment_type]-$comment-"
+echo -e "$CHECK_MARK $CHECK_MARK  Ready for push "
 
 # count down to push
 count=3
@@ -57,8 +60,6 @@ do
     count=`expr $count - 1`
     sleep 1
 done
-
-
 
 #end_
 # echo
@@ -72,7 +73,7 @@ sudo ssh-add ~/.ssh/id_rsa_github
 echo "Finished"
 git status
 git add .
-git commit -m "[$auth] - $comment - $comment"
+git commit -m "[$comment_type]-$comment"
 sudo git push
 
 #end
