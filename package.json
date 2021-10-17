@@ -1,12 +1,13 @@
 {
   "name": "mmc-core-chain",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "1. Blockchain have: Coin - Wallet - Transaction     + Coin - that using for payment => Coin Block     + Transaction - that using for payment => Transaction Block 2. Process     - User mining and give their Coin ( block )     - User give another user money -> Transaction ( block )     - User have Wallet, that have 2 thing:         + Their Transaction -> saving all their transaction ( send - to - coin)         + Their Coin -> saving all their coin, to",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "lazy": "bash script/lazy.sh"
   },
   "author": "duyviet2841998@gmail.com",
   "license": "ISC",
