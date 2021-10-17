@@ -23,4 +23,5 @@
     - User will create Transaction that will be take money from block, and they 
 
 
-2. Test cmd mocha
+2. Deploy
+code: npm run lazy and waiting for the magic

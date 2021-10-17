@@ -18,10 +18,11 @@ auth="viettd"
 
 # scripting
 echo -e "✨ Hello, well come to quick lazy deploy ✨" 
-echo -e "New see your git log: "
+echo -e "we are testing for it, "
+npm run test
 
-echo -e "\x1b[35m# You can setup new auth by change auth $NC"
-read -p "🕵️‍♂️ Author is: [$auth] --> " comment; echo -e " $CHECK_MARK $NC"
+echo -e "___  congratulation, next, add your commit ___"
+read -p "🕵️‍♂️ Add your comment >> " comment; echo -e " $CHECK_MARK $NC"
 
 echo -e "Chose case option commit: \n"
 echo "u -> $op0 (default)" 
@@ -74,13 +75,8 @@ git add .
 git commit -m "[$auth] - $comment - $comment"
 sudo git push
 
-
-
 #end
 echo -p 'Push code success ! ... publish code '
-
-#publish
-npm publish
 
 #~detroy
 unset sw comment_type now op0 op1 op2 next is_next fn
