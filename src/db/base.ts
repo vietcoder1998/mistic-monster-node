@@ -9,18 +9,14 @@ import {
     lrange,
 } from '../redis'
 import { decode, encode } from '../utils'
-
-async function init() {
+;;(async function init() {
+    flushAsync()
     Object.keys(StoreSymbol).forEach(async (symbol: StoreSymbol) => {
         if (symbol === StoreSymbol.privacy) {
             hsetAsync(symbol, {})
         } else hsetAsync(symbol, 'address', [])
     })
-}
-
-async function destroy() {
-    return flushAsync()
-}
+})()
 
 async function add<T>(
     symbol: StoreSymbol,
@@ -187,16 +183,4 @@ async function query(symbol: Symbol, start: number, end: number) {
     }
 }
 
-export {
-    add,
-    get,
-    set,
-    clear,
-    del,
-    validate,
-    total,
-    init,
-    destroy,
-    query,
-    take_last,
-}
+export { add, get, set, clear, del, validate, total, query, take_last }
