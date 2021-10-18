@@ -22,10 +22,6 @@ echo -e "✨ Hello, well come to quick lazy deploy ✨"
 # build 
 echo -e "___ ready for build ___"
 npm run build
-
-echo -e "___ test by mocha, thanks it ___"
-npm run test
-
 echo -e "___  congratulation, next, add your commit ___"
 read -p "🕵️‍♂️ Add your comment >> " comment; echo -e " $CHECK_MARK $NC"
 

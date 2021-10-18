@@ -17,7 +17,6 @@ type TransactionInfo = {
 }
 
 type AccountInfo = {
-    id: string
     name: string
     address: Address
     txs_hash: string[]

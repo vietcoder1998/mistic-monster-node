@@ -1,11 +1,10 @@
 import { AccountInfo } from '..'
 import { AccountType, CoinUnit } from '../enums/type'
-import { address, Address } from '../utils/address'
+import { Address } from '../utils/address'
 
 export default class Account {
-    private id: string
     private name: string
-    private address: Address = address(64)
+    private address: Address
     private txs_hash: string[] = []
     private monster_hash: string[] = []
     private coin: Record<CoinUnit, number> = {
@@ -16,8 +15,8 @@ export default class Account {
     private type: AccountType
     private create_at: number
 
-    constructor(id: string, name: string, type: AccountType) {
-        this.id = id
+    constructor(address: string, name: string, type: AccountType) {
+        this.address = address
         this.name = name
         this.type = type
         this.create_at = new Date().getTime()
@@ -29,14 +28,6 @@ export default class Account {
 
     get _address() {
         return this.address
-    }
-
-    get _id() {
-        return this.id
-    }
-
-    set _id(id: string) {
-        this.id = id
     }
 
     get _create_at() {
@@ -85,9 +76,8 @@ export default class Account {
 
     get _info(): AccountInfo {
         return {
-            id: this._id,
-            name: this._name,
             address: this._address,
+            name: this._name,
             txs_hash: this._txs_hash,
             monster_hash: this._monster_hash,
             coin: this._coin,

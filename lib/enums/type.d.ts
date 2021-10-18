@@ -14,6 +14,8 @@ declare enum CoinUnit {
 }
 declare enum TransactionType {
     Mining = "mining",
-    Transfer = "transfer"
+    Transfer = "transfer",
+    Call = "call",
+    Deploy = "deploy"
 }
 export { MonsterType, TransactionType, CoinUnit, AccountType };

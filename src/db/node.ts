@@ -1,4 +1,4 @@
-import { encode, NodeInfo, Store } from '..'
+import { NodeInfo } from '..'
 import { StoreSymbol } from '../enums'
 import { add, get, set, total } from './base'
 

@@ -1,10 +1,10 @@
-declare enum Store {
+declare enum StoreSymbol {
     blocks = "mmc_blocks",
     txs = "mmc_tsx",
-    account = "mmc_acc",
-    monster = "mmc_monster",
-    wallet = "mmc_wallet",
-    node = "mmc_node",
-    privacy = "mmc_privacy"
+    accounts = "mmc_accounts",
+    wallets = "mmc_wallets",
+    contracts = "mmc_contracts",
+    privacy = "mmc_privacy",
+    nodes = "mmc_nodes"
 }
-export { Store };
+export { StoreSymbol };

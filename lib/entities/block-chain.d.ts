@@ -1,67 +1,82 @@
 import { AccountType } from '../enums/type';
-import { Address } from '../utils/address';
-import { BlockInfo, NodeInfo, TransactionInfo } from '../typings/info';
-import { MonsterShortInfo } from '../typings/monster';
-import Account from './account';
-import Monster from './monster';
-import Wallet from './wallet';
+import { BlockInfo } from '../typings/info';
 export default class BlockChain {
-    private wallets;
-    private accounts;
-    private monsters;
-    private nodes;
-    private txs;
-    private name;
-    private create_at;
-    private author;
-    private blocks;
     constructor();
-    get _total_transaction(): number;
-    get _total_nodes(): number;
-    get _total_account(): number;
-    get _nodes(): Record<number, NodeInfo>;
-    get _create_date(): number;
-    get _author(): string;
-    get _name(): string;
-    get _last_transaction(): TransactionInfo;
-    get _txs(): TransactionInfo[];
-    get _last_account(): Account;
-    get _wallets(): Record<string, Wallet>;
-    get _monster(): {
-        id: string;
-        name: string;
-        img: string;
-        owner: string;
-        level: number;
-        birth_day: number;
-        value: number;
-        gene: string;
-        sale_info: import("../typings/monster").SaleInfo;
-        stats: import("../typings/monster").MonsterStats;
-        class: import("../typings/monster").MonsterClass;
-        abilities: import("../typings/monster").MonsterAbility[];
-        body: import("../typings/monster").MonsterBodyPart[];
-        children: MonsterShortInfo[];
-        parent: MonsterShortInfo[];
-        breed_count: number;
-    }[];
-    get _accounts(): Record<string, Account>;
-    get _total_block(): number;
-    get _last_block(): BlockInfo;
-    on_receiver_new_block(block: BlockInfo): void;
-    generate_monster(from?: Address, to?: Address, monster1?: Monster, monster2?: Monster): void;
-    query(page?: number, size?: number): BlockInfo[];
-    register(password: string, seed: string): Wallet;
-    create_account(walletId: string, type?: AccountType, name?: string): Account;
-    get_wallet_detail(address?: string): Wallet;
-    get_account_detail(address: string): Account;
-    create_wallet(password: string, seed: string): Wallet;
-    get_transaction_detail(hash: string): TransactionInfo[];
-    register_node(address: string, port: number, name: string, private_key?: string): {
-        msg: string;
-        code: string;
-    };
-    add_block(block_info: BlockInfo): {};
-    compare_transaction(len: number): number;
-    get_object_size(obj: Object): number;
+    _total_tx(): Promise<{
+        code: import("../enums/code").Code;
+        total: number;
+        Code?: undefined;
+    } | {
+        Code: import("../enums/code").Code;
+        code?: undefined;
+        total?: undefined;
+    }>;
+    _total_nodes(): Promise<{
+        code: import("../enums/code").Code;
+        total: number;
+        Code?: undefined;
+    } | {
+        Code: import("../enums/code").Code;
+        code?: undefined;
+        total?: undefined;
+    }>;
+    _total_account(): Promise<{
+        code: import("../enums/code").Code;
+        total: number;
+        Code?: undefined;
+    } | {
+        Code: import("../enums/code").Code;
+        code?: undefined;
+        total?: undefined;
+    }>;
+    get_total_block(): Promise<{
+        code: import("../enums/code").Code;
+        total: number;
+        Code?: undefined;
+    } | {
+        Code: import("../enums/code").Code;
+        code?: undefined;
+        total?: undefined;
+    }>;
+    get_last_block(): Promise<{
+        code: import("../enums/code").Code;
+        data: {
+            code: import("../enums/code").Code;
+            data?: BlockInfo;
+        };
+    } | {
+        code: import("../enums/code").Code;
+        data?: undefined;
+    }>;
+    register_wallet(password: string, seed: string, name: string): Promise<{
+        rs1: {
+            add_symbol: any;
+            push_address: any;
+            code?: undefined;
+        } | {
+            code: import("../enums/code").Code;
+            add_symbol?: undefined;
+            push_address?: undefined;
+        };
+        rs2: {
+            add_symbol: any;
+            push_address: any;
+            code?: undefined;
+        } | {
+            code: import("../enums/code").Code;
+            add_symbol?: undefined;
+            push_address?: undefined;
+        };
+    }>;
+    create_account(wallet_address: string, type?: AccountType, name?: string): Promise<void>;
+    get_wallet_detail(address: string, private_key: string): Promise<{
+        code: import("../enums/code").Code;
+        data?: import("../typings/info").WalletInfo;
+    }>;
+    get_account_detail(address: string): Promise<void>;
+    create_wallet(password: string, seed: string, name?: string): Promise<void>;
+    get_transaction_detail(address: string): Promise<void>;
+    register_node(address: string, port: number, name: string, private_key?: string): Promise<void>;
+    add_block(block_info: BlockInfo): Promise<void>;
+    compare_transaction(len: number): Promise<void>;
 }

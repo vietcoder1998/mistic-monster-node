@@ -6,6 +6,7 @@ import {
     hlenAsync,
     hsetAsync,
     lpushAsync,
+    lrange,
 } from '../redis'
 import { decode, encode } from '../utils'
 
@@ -53,9 +54,25 @@ async function get<T>(
     private_key?: string
 ): Promise<{ code: Code; data?: T | undefined }> {
     try {
-        const value = await hgetAsync(symbol, symbol, address)
+        const value = await hgetAsync(symbol, address)
         const data: T = decode<T>(value, private_key)
 
+        return {
+            code: Code.success,
+            data,
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            code: Code.request_err,
+        }
+    }
+}
+
+async function take_last<T>(symbol: StoreSymbol, private_key?: string) {
+    try {
+        const last_address: string = await lrange(`${symbol}.address`, -1, -1)
+        const data = await get<T>(symbol, last_address, private_key)
         return {
             code: Code.success,
             data,
@@ -170,4 +187,16 @@ async function query(symbol: Symbol, start: number, end: number) {
     }
 }
 
-export { add, get, set, clear, del, validate, total, init, destroy, query }
+export {
+    add,
+    get,
+    set,
+    clear,
+    del,
+    validate,
+    total,
+    init,
+    destroy,
+    query,
+    take_last,
+}

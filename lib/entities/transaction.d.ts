@@ -1,5 +1,6 @@
 import { CoinUnit, TransactionType } from '../enums/type';
 import { TransactionInfo } from '../typings';
+import { Address } from '../utils/address';
 declare class Transaction {
     private type;
     private from;
@@ -11,8 +12,15 @@ declare class Transaction {
     private hash;
     private status;
     private block_id;
+    private address;
+    private gas;
+    private payer;
     constructor(block_id: number, from: string, to: string, value: number, type: TransactionType, unit: CoinUnit, data: any);
     get _type(): TransactionType;
+    get _payer(): Address;
+    set _payer(payer: Address);
+    get _address(): string;
+    set _address(address: string);
     get _from(): string;
     get _to(): string;
     get _value(): number;
@@ -23,6 +31,8 @@ declare class Transaction {
     get _status(): string;
     get _block_id(): number;
     set _status(status: string);
+    get _gas(): number;
+    set _gas(gas: number);
     get _info(): TransactionInfo;
 }
 export default Transaction;
