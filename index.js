@@ -1,1 +1,3 @@
-export * as mmc from './lib'
+import MMCBlockChain from './lib'
+
+export default MMCBlockChain

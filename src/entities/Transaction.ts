@@ -1,5 +1,6 @@
 import { CoinUnit, TransactionType } from '../enums/type'
 import { TransactionInfo } from '../typings'
+import { Address } from '../utils/address'
 
 class Transaction {
     private type: TransactionType
@@ -12,6 +13,9 @@ class Transaction {
     private hash: string
     private status: string = 'call'
     private block_id: number
+    private address: string
+    private gas: number
+    private payer: Address
 
     constructor(
         block_id: number,
@@ -34,6 +38,22 @@ class Transaction {
 
     get _type() {
         return this.type
+    }
+
+    get _payer() {
+        return this.payer
+    }
+
+    set _payer(payer: Address) {
+        this.payer = payer
+    }
+
+    get _address() {
+        return this.address
+    }
+
+    set _address(address: string) {
+        this.address = address
     }
 
     get _from() {
@@ -76,8 +96,17 @@ class Transaction {
         this.status = status
     }
 
+    get _gas() {
+        return this.gas
+    }
+
+    set _gas(gas: number) {
+        this.gas = gas
+    }
+
     get _info(): TransactionInfo {
         return {
+            address: this._address,
             type: this._type,
             from: this._from,
             to: this._to,
@@ -88,6 +117,7 @@ class Transaction {
             create_at: this._create_at,
             status: this._status,
             block_id: this._block_id,
+            payer: this._payer,
         }
     }
 }

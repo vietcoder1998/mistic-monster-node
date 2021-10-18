@@ -1,10 +1,13 @@
 const bip39 = require('bip39')
 import faker from 'faker'
-import { AccountType, CoinUnit } from '../enums/type'
-import { address, Address } from '../utils/address'
-import { generate_stats } from '../utils/generate'
+import { get_node_len, get_tx_detail } from '../db'
+import { total } from '../db/base'
+import { StoreSymbol } from '../enums'
+import { AccountType } from '../enums/type'
 import { BlockInfo, NodeInfo, TransactionInfo } from '../typings/info'
 import { MonsterShortInfo } from '../typings/monster'
+import { Address } from '../utils/address'
+import { generate_stats } from '../utils/generate'
 import Account from './account'
 import Monster from './monster'
 import MMCNode from './node'
@@ -17,64 +20,20 @@ export default class BlockChain {
     private nodes: Record<string, NodeInfo> = {}
     private txs: TransactionInfo[] = []
     private name: string
-    private create_at: number = new Date().getDate()
-    private author: string = 'abc'
     private blocks: BlockInfo[] = []
 
     constructor() {}
 
-    get _total_transaction(): number {
-        return this.txs.length
+    async _total_tx() {
+        return await total(StoreSymbol.txs)
     }
 
-    get _total_nodes(): number {
-        return this.get_object_size(this._nodes)
+    async _total_nodes() {
+        return await total(StoreSymbol.nodes)
     }
 
-    get _total_account(): number {
-        return this.get_object_size(this._accounts)
-    }
-
-    get _nodes(): Record<number, NodeInfo> {
-        return this.nodes
-    }
-
-    get _create_date() {
-        return this.create_at
-    }
-
-    get _author(): string {
-        return this.author
-    }
-
-    get _name(): string {
-        return this.name
-    }
-
-    get _last_transaction(): TransactionInfo {
-        return this.txs[this.txs.length - 1]
-    }
-
-    get _txs() {
-        return this.txs
-    }
-
-    get _last_account(): Account {
-        const last_account =
-            Object.keys(this.accounts).length > 0
-                ? Object.keys(this.accounts).map(
-                      (k: string) => this.accounts[k]
-                  )[0]
-                : undefined
-        return last_account
-    }
-
-    get _wallets() {
-        return this.wallets
-    }
-
-    get _monster() {
-        return this.monsters.map((monster: Monster, i: number) => monster._info)
+    async _total_account() {
+        return await total(StoreSymbol.accounts)
     }
 
     get _accounts() {
@@ -92,54 +51,6 @@ export default class BlockChain {
     on_receiver_new_block(block: BlockInfo) {
         if (block.id > this._last_block.id) {
             this.blocks.push(block)
-        }
-    }
-
-    generate_monster(
-        from?: Address,
-        to?: Address,
-        monster1?: Monster,
-        monster2?: Monster
-    ) {
-        try {
-            const id = this.monsters.length
-            const short_info_1: MonsterShortInfo = monster1
-                ? new MonsterShortInfo(
-                      id + 1,
-                      monster1._name,
-                      monster1._class,
-                      monster1._level,
-                      monster1._img,
-                      monster1._gene
-                  )
-                : undefined
-
-            const short_info_2: MonsterShortInfo = monster2
-                ? new MonsterShortInfo(
-                      id + 1,
-                      monster2._name,
-                      monster2._class,
-                      monster2._level,
-                      monster2._img,
-                      monster2._gene
-                  )
-                : undefined
-
-            const monster = new Monster(
-                String(id + 1),
-                faker.name.findName(),
-                faker.image.imageUrl(),
-                from,
-                short_info_1 && short_info_2
-                    ? [short_info_1, short_info_2]
-                    : undefined,
-                generate_stats(20, 10)
-            )
-
-            this.monsters.push(monster)
-        } catch (error) {
-            console.log('error in  generate monster')
-            throw error
         }
     }
 
@@ -196,13 +107,13 @@ export default class BlockChain {
         return this.accounts[address]
     }
 
-    create_wallet(password: string, seed: string) {
+    create_wallet(password: string, seed: string, name?: string) {
         try {
             const create_at = new Date().getTime()
             const address = bip39
                 .mnemonicToSeedSync(seed + create_at)
                 .toString('hex')
-            const wallet: Wallet = new Wallet(password, seed, address)
+            const wallet: Wallet = new Wallet(password, seed, address, name)
 
             Object.assign(this.wallets, { [address]: wallet })
             return wallet
@@ -212,11 +123,8 @@ export default class BlockChain {
         }
     }
 
-    get_transaction_detail(hash: string) {
-        return (
-            this._txs.filter((tx: TransactionInfo) => tx.hash === hash) ||
-            undefined
-        )
+    async get_transaction_detail(address: string) {
+        return await get_tx_detail(address)
     }
 
     register_node(

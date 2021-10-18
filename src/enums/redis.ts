@@ -1,11 +1,11 @@
-enum Store {
-    blocks = 'mmc_blocks',
-    txs = 'mmc_tsx',
-    account = 'mmc_acc',
-    monster = 'mmc_monster',
-    wallet = 'mmc_wallet',
-    node = 'mmc_node',
-    privacy = 'mmc_privacy',
+enum StoreSymbol {
+    blocks = 'blocks',
+    txs = 'tsx',
+    accounts = 'accounts',
+    wallets = 'wallets',
+    contracts = 'contracts',
+    privacy = 'privacy',
+    nodes = 'nodes',
 }
 
-export { Store }
+export { StoreSymbol }

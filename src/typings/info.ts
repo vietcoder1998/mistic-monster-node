@@ -2,9 +2,11 @@ import { AccountType, CoinUnit, TransactionType } from '../enums/type'
 import { Address } from '../utils/address'
 
 type TransactionInfo = {
+    address: string
     block_id: number
     from: Address
     to: Address
+    payer: Address
     type: TransactionType
     value: number
     unit: CoinUnit
@@ -18,7 +20,7 @@ type AccountInfo = {
     id: string
     name: string
     address: Address
-    transaction_hash: string[]
+    txs_hash: string[]
     monster_hash: string[]
     coin: Record<CoinUnit, number>
     type: AccountType
@@ -33,6 +35,15 @@ type NodeInfo = {
     transaction_length: number
 }
 
+type ContractInfo = {
+    category: AccountType
+    balance: number
+    source: string
+    address: Address
+    deploy_by: Address
+    language: 'ts'
+}
+
 type BlockInfo = {
     id: number
     rule: number
@@ -44,4 +55,19 @@ type BlockInfo = {
     node_id: number
 }
 
-export { BlockInfo, TransactionInfo, NodeInfo, AccountInfo }
+type WalletInfo = {
+    address: string
+    name: string
+    accounts: string[]
+    txs_hash: string[]
+    create_at: number
+}
+
+export {
+    BlockInfo,
+    TransactionInfo,
+    NodeInfo,
+    AccountInfo,
+    WalletInfo,
+    ContractInfo,
+}

@@ -1,24 +1,29 @@
-import Account from './account'
+import { WalletInfo } from '..'
 
 class Wallet {
     private address: string
     private password: string
     private seed: string
     private accounts: string[] = []
-    private transaction_hash: string[] = []
+    private txs_hash: string[] = []
     public create_at: number
+    private name: string
 
-    constructor(password: string, seed: string, address: string) {
+    constructor(password: string, seed: string, address: string, name: string) {
         this.address = address
         this.password = password
         this.seed = seed
         this.create_at = new Date().getTime()
+        this.name = name
     }
 
     get _seed() {
         return this.seed
     }
 
+    get _name() {
+        return this.name
+    }
     get _address() {
         return this.address
     }
@@ -35,29 +40,29 @@ class Wallet {
         this.accounts = accounts
     }
 
-    get _transaction_hash() {
-        return this.transaction_hash
+    get _txs_hash() {
+        return this.txs_hash
     }
 
-    set _transaction_hash(transaction_hash: string[]) {
-        this.transaction_hash = transaction_hash
+    set _txs_hash(txs_hash: string[]) {
+        this.txs_hash = txs_hash
     }
 
     push_account(address: string) {
         this.accounts.push(address)
     }
 
-    push_transaction_hash(transaction_hash: string) {
-        this.accounts.push(transaction_hash)
+    push_txs_hash(txs_hash: string) {
+        this.accounts.push(txs_hash)
     }
 
-    get _info() {
+    get _info(): WalletInfo {
         return {
             address: this._address,
-            seed: this._seed,
             accounts: this._accounts,
-            transaction_hash: this._transaction_hash,
+            txs_hash: this._txs_hash,
             create_at: this.create_at,
+            name: this._name,
         }
     }
 }

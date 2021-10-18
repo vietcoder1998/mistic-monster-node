@@ -1,3 +1,4 @@
+import { AccountInfo } from '..'
 import { AccountType, CoinUnit } from '../enums/type'
 import { address, Address } from '../utils/address'
 
@@ -5,7 +6,7 @@ export default class Account {
     private id: string
     private name: string
     private address: Address = address(64)
-    private transaction_hash: string[] = []
+    private txs_hash: string[] = []
     private monster_hash: string[] = []
     private coin: Record<CoinUnit, number> = {
         [CoinUnit.Monster]: 0,
@@ -70,11 +71,28 @@ export default class Account {
         return this.coin
     }
 
+    get _txs_hash() {
+        return this.txs_hash
+    }
+
     push_coin(unit: CoinUnit, value: number) {
         this.coin[unit] = value
     }
 
     add_transaction(hash: string) {
-        this.transaction_hash.push(hash)
+        this.txs_hash.push(hash)
+    }
+
+    get _info(): AccountInfo {
+        return {
+            id: this._id,
+            name: this._name,
+            address: this._address,
+            txs_hash: this._txs_hash,
+            monster_hash: this._monster_hash,
+            coin: this._coin,
+            type: this._type,
+            create_at: this._create_at,
+        }
     }
 }

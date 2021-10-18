@@ -8,8 +8,15 @@ import {
     MonsterEntity,
     MonsterClass,
 } from './monster'
-import { BlockInfo, TransactionInfo, NodeInfo } from './info'
-import { Result, TransferHistory } from './transfer-history'
+import {
+    BlockInfo,
+    TransactionInfo,
+    NodeInfo,
+    WalletInfo,
+    AccountInfo,
+    ContractInfo,
+} from './info'
+import { Result, TransferHistory } from './transfer'
 
 export {
     MonsterStats,
@@ -25,4 +32,7 @@ export {
     NodeInfo,
     Result,
     TransferHistory,
+    WalletInfo,
+    AccountInfo,
+    ContractInfo,
 }
