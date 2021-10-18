@@ -11,11 +11,6 @@ import {
 import { decode, encode } from '../utils'
 ;;(async function init() {
     flushAsync()
-    Object.keys(StoreSymbol).forEach(async (symbol: StoreSymbol) => {
-        if (symbol === StoreSymbol.privacy) {
-            hsetAsync(symbol, {})
-        } else hsetAsync(symbol, 'address', [])
-    })
 })()
 
 async function add<T>(
@@ -29,7 +24,7 @@ async function add<T>(
         const add_symbol = await hsetAsync(
             symbol,
             address,
-            encode(value, private_key)
+            encode<T>(value, private_key)
         )
 
         return {
@@ -104,7 +99,7 @@ async function set<T>(
 
 async function clear(symbol: StoreSymbol) {
     try {
-        const result = await hsetAsync(symbol, {})
+        const result = await hsetAsync(symbol, '')
 
         return {
             code: Code.success,
@@ -169,7 +164,11 @@ async function total(symbol: StoreSymbol) {
 
 async function query(symbol: Symbol, start: number, end: number) {
     try {
-        const query_list: string[] = await hgetAsync(`${symbol}.address`)
+        const query_list: string[] = await hgetAsync(
+            `${symbol}.address`,
+            start,
+            end
+        )
         const result = await hgetAsync(symbol, ...query_list)
         return {
             code: Code.success,

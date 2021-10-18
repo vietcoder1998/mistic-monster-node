@@ -1,5 +1,10 @@
 const bip39 = require('bip39')
-import { add_wallet, get_last_block, get_wallet_detail } from '../db'
+import {
+    add_wallet,
+    get_account,
+    get_last_block,
+    get_wallet_detail,
+} from '../db'
 import { total } from '../db/base'
 import { StoreSymbol } from '../enums'
 import { AccountType } from '../enums/type'
@@ -40,12 +45,17 @@ export default class BlockChain {
         type?: AccountType,
         name?: string
     ) {
-        return 
+        return
     }
+    
     async get_wallet_detail(address: string, private_key: string) {
         return await get_wallet_detail(address, private_key)
     }
-    async get_account_detail(address: string) {}
+
+    async get_account_detail(address: string, private_key: string) {
+        return await get_account(address, private_key)
+    }
+
     async create_wallet(password: string, seed: string, name?: string) {}
     async get_transaction_detail(address: string) {}
     async register_node(

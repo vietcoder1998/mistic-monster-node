@@ -73,7 +73,10 @@ export default class BlockChain {
         code: import("../enums/code").Code;
         data?: import("../typings/info").WalletInfo;
     }>;
-    get_account_detail(address: string): Promise<void>;
+    get_account_detail(address: string, private_key: string): Promise<{
+        code: import("../enums/code").Code;
+        data?: import("../typings/info").AccountInfo;
+    }>;
     create_wallet(password: string, seed: string, name?: string): Promise<void>;
     get_transaction_detail(address: string): Promise<void>;
     register_node(address: string, port: number, name: string, private_key?: string): Promise<void>;
