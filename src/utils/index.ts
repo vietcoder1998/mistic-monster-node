@@ -1,6 +1,6 @@
 import query from './query'
 import { create_stats, random_id, generate_stats } from './generate'
-import { address } from './address'
+import { m_address, random_hash } from './address'
 import { encode, decode } from './module'
 
 export {
@@ -8,7 +8,8 @@ export {
     create_stats,
     random_id,
     generate_stats,
-    address,
+    random_hash,
+    m_address,
     encode,
     decode,
 }

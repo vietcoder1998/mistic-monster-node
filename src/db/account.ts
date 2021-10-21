@@ -1,46 +1,31 @@
-import { Code, encode } from '..'
+import { add, append, get, get_arr, is_exist, push, query, set } from '.'
+import { TransactionInfo } from '..'
 import { StoreSymbol } from '../enums'
-import { AccountInfo } from '../typings'
-import { get, set } from './base'
+import { Address } from '../utils/address'
 
-async function add_account(private_key: string, account: AccountInfo) {
-    return await set<string>(
-        StoreSymbol.privacy,
-        account.address,
-        encode(account, private_key)
-    )
+async function get_account_detail(address: string) {
+    return await get<TransactionInfo>(StoreSymbol.accounts, address)
 }
 
-async function register_account(account: AccountInfo, private_key: string) {
-    if (!private_key) {
-        return {
-            code: Code.not_found,
-            msg: 'private key is requirement',
-        }
-    }
-    return await set<AccountInfo>(
-        StoreSymbol.accounts,
-        account.address,
-        account
-    )
+async function add_account(address: string | string[]) {
+    return await append(StoreSymbol.accounts, address)
 }
 
-async function update_private_key(
-    address: string,
-    private_key: string,
-    new_private_key: string
-) {
-    const data = await get<string>(StoreSymbol.privacy, address, private_key)
-
-    if (!data.data || data.data !== private_key) {
-        return data
-    } else {
-        return await set<string>(StoreSymbol.privacy, address, new_private_key)
-    }
+async function add_tx_to_account(tx_hash: Address, address: string) {
+    return await push<string>(StoreSymbol.accounts, address, address)
 }
 
-async function get_account(address: string, private_key: string) {
-    return get<AccountInfo>(StoreSymbol.accounts, address, private_key)
+async function get_list_accounts(page: number, size: number) {
+    return await query<TransactionInfo>(StoreSymbol.accounts, page, size)
 }
 
-export { add_account, get_account, register_account, update_private_key }
+async function is_exist_account(address: string) {
+    return await is_exist(StoreSymbol.accounts, address)
+}
+export {
+    get_account_detail,
+    add_account,
+    add_tx_to_account,
+    get_list_accounts,
+    is_exist_account,
+}

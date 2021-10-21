@@ -14,9 +14,11 @@ declare class Transaction {
     private block_id;
     private address;
     private gas;
+    private gas_price;
     private payer;
-    constructor(block_id: number, from: string, to: string, value: number, type: TransactionType, unit: CoinUnit, data: any);
+    constructor(block_id: number, from: string, to: string, value: number, type: TransactionType, unit: CoinUnit, gas: number, gas_price: string, payer: string, data: any);
     get _type(): TransactionType;
+    gen_hash(): string;
     get _payer(): Address;
     set _payer(payer: Address);
     get _address(): string;
@@ -33,6 +35,7 @@ declare class Transaction {
     set _status(status: string);
     get _gas(): number;
     set _gas(gas: number);
+    get _gas_price(): string;
     get _info(): TransactionInfo;
 }
 export default Transaction;

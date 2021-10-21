@@ -1,6 +1,6 @@
-function address(length: number): string {
-    let base = 'mmx'
-    const alphabet = 'qwertyuiopasdfghjklzxcvbnm1234567890'
+function m_address(length: number): string {
+    let base = 'mmc'
+    const alphabet = 'abcdef1234567890'
     for (let i = 0; i < length ? length - 1 : 0; i++) {
         base += alphabet[Math.floor(Math.random() * (alphabet.length - 1))]
     }
@@ -17,6 +17,6 @@ function random_hash(length: number): string {
     return hash
 }
 
-type Address = ReturnType<typeof address>
+type Address = ReturnType<typeof m_address>
 
-export { address, Address, random_hash }
+export { m_address, Address, random_hash }

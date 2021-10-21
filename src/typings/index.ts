@@ -15,6 +15,7 @@ import {
     WalletInfo,
     AccountInfo,
     ContractInfo,
+    ShotTransactionInfo,
 } from './info'
 import { Result, TransferHistory } from './transfer'
 
@@ -35,4 +36,5 @@ export {
     WalletInfo,
     AccountInfo,
     ContractInfo,
+    ShotTransactionInfo,
 }

@@ -2,28 +2,31 @@ import CryptoJS from 'crypto-js'
 
 function encode<T>(data: T, private_key?: string): string {
     try {
-        const input = JSON.stringify(data)
-        const key = private_key || 'no_private_key'
-        const result = CryptoJS.AES.encrypt(input, key).toString()
+        const result: string = JSON.stringify(data)
+
+        if (private_key) {
+            return CryptoJS.AES.encrypt(result, private_key).toString()
+        }
+        
         return result
     } catch (error) {
-        console.log(error)
-        return ''
+        throw error
     }
 }
 
 function decode<T>(data: string, private_key?: string): T {
+    console.log('🚀 ~ file: module.ts ~ line 18 ~ data', data, private_key)
     try {
-        const key = private_key || 'no_private_key'
-        const output = CryptoJS.AES.decrypt(data, key).toString(
-            CryptoJS.enc.Utf8
-        )
+        if (private_key) {
+            const output = CryptoJS.AES.decrypt(data, private_key).toString(
+                CryptoJS.enc.Utf8
+            )
+            return JSON.parse(output)
+        }
 
-        const result: T = JSON.parse(output)
-        return result
+        return JSON.parse(data)
     } catch (error) {
-        console.log(error)
-        return undefined
+        throw error
     }
 }
 

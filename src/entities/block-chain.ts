@@ -1,15 +1,26 @@
-const bip39 = require('bip39')
+import { Block } from '.'
+import { Account } from '..'
+import { get_arr, take_last, total } from '../db'
+import { add_account, add_tx_to_account, is_exist_account } from '../db/account'
 import {
-    add_wallet,
-    get_account,
+    get_block_detail,
     get_last_block,
+    get_list_block,
+    push_block,
+} from '../db/block'
+import { get_node_detail, register_node } from '../db/node'
+import { add_tx, get_list_txs, get_tx_detail } from '../db/transaction'
+import {
+    add_account_to_wallet,
+    add_wallet,
     get_wallet_detail,
-} from '../db'
-import { total } from '../db/base'
-import { StoreSymbol } from '../enums'
-import { AccountType } from '../enums/type'
-import { BlockInfo } from '../typings/info'
-import { address } from '../utils'
+} from '../db/wallet'
+import { Code, Message, StoreSymbol } from '../enums'
+import { AccountType, CoinUnit, TransactionType } from '../enums/type'
+import { BlockInfo, NodeInfo, TransactionInfo } from '../typings/info'
+import { m_address } from '../utils'
+import { generate_public_private_key } from '../utils/generate'
+import Transaction from './transaction'
 import Wallet from './wallet'
 
 export default class BlockChain {
@@ -35,40 +46,181 @@ export default class BlockChain {
         return await get_last_block()
     }
 
-    async register_wallet(password: string, seed: string, name: string) {
-        const wallet: Wallet = new Wallet(password, seed, address(128), name)
-        return await add_wallet(wallet._info, password)
+    async get_block_detail(height: number) {
+        const data = await get_block_detail(String(height))
+        console.log(
+            '🚀 ~ file: block-chain.ts ~ line 52 ~ BlockChain ~ get_block ~ data',
+            data
+        )
+        return data
     }
 
-    async create_account(
-        wallet_address: string,
-        type?: AccountType,
-        name?: string
-    ) {
-        return
+    async get_tx_detail(hash: string) {
+        return await get_tx_detail(hash)
     }
-    
+
+    async register_wallet(password: string, name: string) {
+        const create_at = new Date().getTime()
+        const { address, seed, private_key } =
+            generate_public_private_key(password)
+        const wallet: Wallet = new Wallet(password, address, name, create_at)
+        const result_2 = await add_account(wallet._address)
+
+        if (result_2.code < 0) {
+            return result_2
+        } else {
+            const result = await add_wallet(wallet._info, private_key)
+
+            return {
+                seed,
+                private_key,
+                ...result,
+            }
+        }
+    }
+
+    private compare_hash(
+        hash: string,
+        proof: number,
+        last_hash: string
+    ): boolean {
+        if (CryptoJS.SHA256(hash + proof).toString() === last_hash) {
+            return true
+        }
+
+        return false
+    }
+
+    async mine_block(node_address: string, address: string) {
+        const last_block: BlockInfo = (
+            await take_last<BlockInfo>(StoreSymbol.blocks)
+        )?.data
+
+        const sender = await is_exist_account(address)
+        console.log('sender ->', sender)
+
+        if (!sender) {
+            return {
+                code: Code.not_found,
+                msg: 'sender is required',
+            }
+        }
+
+        const block = new Block(
+            last_block ? Number(last_block.height) + 1 : 0,
+            node_address,
+            last_block?.hash || ''
+        )
+
+        if (block._info.proof > last_block.proof) {
+            const tx = new Transaction(
+                block._height,
+                '0',
+                address,
+                1,
+                TransactionType.Mining,
+                CoinUnit.Monster,
+                0,
+                '1000',
+                'mining',
+                '0'
+            )
+
+            block.push_transaction(tx._address)
+            const add_block_result = await this.add_block(block._info)
+            const add_tx_result = await add_tx_to_account(tx._hash, tx._to)
+
+            return {
+                ...add_block_result,
+                ...add_tx_result,
+                block,
+                tx,
+            }
+        } 
+
+        return {
+            code: Code.error_block,
+            msg: 'block is lower than error block'
+        }
+    }
+
+    async validate_block(
+        block_info: BlockInfo,
+        address: string,
+        private_key: string,
+    ) {
+        const last_block: BlockInfo = (
+            await take_last<BlockInfo>(StoreSymbol.blocks)
+        )?.data
+
+        if (
+            last_block &&
+            block_info &&
+            this.compare_hash(
+                block_info.hash,
+                block_info.proof,
+                last_block.hash
+            )
+        ) {
+            return {
+                code: Code.success,
+            }
+        }
+        return {
+            code: Code.error_block,
+        }
+    }
+
+    async add_block(block: BlockInfo) {
+        return await push_block(block)
+    }
+
+    async get_list_block(page: number, size: number) {
+        return await get_list_block(page, size)
+    }
+
+    async get_list_txs(page: number, size: number) {
+        return await get_list_txs(page, size)
+    }
+
+    async create_account(address: string, name: string, private_key: string) {
+        const account = new Account(m_address(64), name, AccountType.USER)
+        return await add_account_to_wallet(
+            account._short_info,
+            address,
+            private_key
+        )
+    }
+
+    async resolve_block(block: BlockInfo, address: string) {
+        const last_block = (await get_last_block()).data
+        const node = (await get_node_detail(address)).data
+
+        if (!node) {
+            return { code: Code.not_found, msg: Message.not_found }
+        } else if (!last_block && block.proof > last_block.proof) {
+            return await this.add_block(block)
+        } else {
+            return {
+                code: Code.error_block,
+                msg: Message.block_err,
+            }
+        }
+    }
+
     async get_wallet_detail(address: string, private_key: string) {
         return await get_wallet_detail(address, private_key)
     }
 
-    async get_account_detail(address: string, private_key: string) {
-        return await get_account(address, private_key)
+    async create_tx(tx: TransactionInfo) {
+        return await add_tx(tx)
     }
 
-    async create_wallet(password: string, seed: string, name?: string) {}
-    async get_transaction_detail(address: string) {}
-    async register_node(
-        address: string,
-        port: number,
-        name: string,
-        private_key?: string
-    ) {
-        return
+    async register_node(node: NodeInfo) {
+        return await register_node(node)
     }
 
-    async add_block(block_info: BlockInfo) {
-        return
+    async add_node(node: NodeInfo) {
+        return await register_node(node)
     }
-    async compare_transaction(len: number) {}
 }

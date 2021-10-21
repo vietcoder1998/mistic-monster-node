@@ -1,24 +1,24 @@
 import { WalletInfo } from '..'
+import { ShortAccountInfo, ShotTransactionInfo } from '../typings/info'
 
 class Wallet {
     private address: string
     private password: string
-    private seed: string
-    private accounts: string[] = []
+    private accounts: ShortAccountInfo[] = []
     private txs_hash: string[] = []
     public create_at: number
     private name: string
 
-    constructor(password: string, seed: string, address: string, name: string) {
+    constructor(
+        password?: string,
+        address?: string,
+        name?: string,
+        create_at?: number
+    ) {
         this.address = address
         this.password = password
-        this.seed = seed
-        this.create_at = new Date().getTime()
+        this.create_at = create_at
         this.name = name
-    }
-
-    get _seed() {
-        return this.seed
     }
 
     get _name() {
@@ -32,11 +32,11 @@ class Wallet {
         return this.password
     }
 
-    get _accounts() {
+    get _accounts(): ShortAccountInfo[] {
         return this.accounts
     }
 
-    set _accounts(accounts: string[]) {
+    set _accounts(accounts: ShortAccountInfo[]) {
         this.accounts = accounts
     }
 
@@ -48,12 +48,18 @@ class Wallet {
         this.txs_hash = txs_hash
     }
 
-    push_account(address: string) {
-        this.accounts.push(address)
+    push_account(info: ShortAccountInfo) {
+        this.accounts.push(info)
     }
 
-    push_txs_hash(txs_hash: string) {
-        this.accounts.push(txs_hash)
+    push_txs(tx_hash: string, address: string) {
+        const account = this.accounts.filter(
+            (acc) => acc.address === address
+        )[0]
+        if (account) {
+            account.txs.push(tx_hash)
+            this.accounts.push(account)
+        }
     }
 
     get _info(): WalletInfo {

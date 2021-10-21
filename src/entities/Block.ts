@@ -1,24 +1,23 @@
 import crypto from 'crypto-js'
 import { BlockInfo } from '../typings/info'
-import Transaction from './transaction'
 
 export default class Block {
-    private rule = 3
+    private rule = 2
     private create_at: number
     private last_hash: string
     private hash?: string
     private txs: string[] = []
     private proof: number
-    private id: number
-    private node_id: number
+    private height: number
+    private node_address: string
 
-    constructor(id: number, node_id: number, last_hash: string) {
-        this.id = id
-        this.last_hash = last_hash ? last_hash.substring(0, -6) : ''
-        const { hash, proof } = this.gen_hash(last_hash)
+    constructor(height: number, node_address: string, last_hash: string) {
+        this.height = height
+        this.last_hash = last_hash
+        const { hash, proof } = this.generate_hash(last_hash)
         this.proof = proof
         this.hash = hash
-        this.node_id = node_id
+        this.node_address = node_address
     }
 
     // setRule
@@ -30,21 +29,29 @@ export default class Block {
         return this.hash
     }
 
-    get _id() {
-        return this.id
+    get _height() {
+        return this.height
     }
 
     get _info(): BlockInfo {
         return {
-            id: this.id,
+            height: this.height,
             rule: this.rule,
             create_at: this.create_at,
             proof: this.proof,
             hash: this.hash,
             last_hash: this.last_hash,
             txs: this._all_transaction_info,
-            node_id: this.node_id,
+            node_address: this.node_address,
         }
+    }
+
+    get _node_address() {
+        return this.node_address
+    }
+
+    set _node_address(node_address: string) {
+        this.node_address = node_address
     }
 
     get _all_transaction_info(): string[] {
@@ -55,43 +62,28 @@ export default class Block {
         this.txs.push(tx_hash)
     }
 
-    gen_hash(last_hash: string): { proof: number; hash: string } {
+    generate_hash(last_hash: string): { proof: number; hash: string } {
         let hash
         let invalid = true
         let proof = 0
         while (invalid) {
-            const random_string: string =
-                last_hash +
-                String(1000000 + Math.floor(Math.random() * 8999999))
-
-            hash = crypto.AES.encrypt(
-                random_string.substring(0, -6),
-                'mistic_monster'
-            ).toString()
+            const random_string: string = last_hash + proof
+            hash = crypto.SHA256(random_string).toString()
 
             if (this.is_valid_hash(hash)) {
+                console.log('eroka ->', hash)
                 invalid = false
-            } else {
-                proof += 1
-            }
+                this.proof = proof
+            } else proof += 1
         }
 
         return { hash, proof }
     }
 
     is_valid_hash(hash: string): boolean {
-        let count = 0
-
         if (hash) {
-            for (let i = 0; i < hash.length - 1; i++) {
-                if (hash[i] === '0') {
-                    count += 1
-                }
-            }
-
-            if (count === this.rule) {
-                return true
-            }
+            console.log('hash ->', hash)
+            if (hash.substr(0, 1) == '0') return true
         }
 
         return false

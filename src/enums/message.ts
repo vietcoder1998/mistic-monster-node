@@ -5,6 +5,7 @@ enum Message {
     request_error = 'req_error',
     err_private_key = 'err_private_key',
     unknown = 'unknown',
+    block_err = 'err_block',
 }
 
 export {  Message  }

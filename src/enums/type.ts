@@ -18,8 +18,12 @@ enum CoinUnit {
 enum TransactionType {
     Mining = 'mining',
     Transfer = 'transfer',
-    Call = 'call',
-    Deploy = 'deploy',
 }
 
-export { MonsterType, TransactionType, CoinUnit, AccountType }
+enum TransactionState {
+    call = 'call',
+    deploy = 'deploy',
+    exit = 'exit',
+}
+
+export { MonsterType, TransactionType, CoinUnit, AccountType, TransactionState }

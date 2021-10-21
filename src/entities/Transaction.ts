@@ -1,6 +1,7 @@
 import { CoinUnit, TransactionType } from '../enums/type'
 import { TransactionInfo } from '../typings'
-import { Address } from '../utils/address'
+import { Address, m_address } from '../utils/address'
+import CryptoJS from 'crypto-js'
 
 class Transaction {
     private type: TransactionType
@@ -14,7 +15,8 @@ class Transaction {
     private status: string = 'call'
     private block_id: number
     private address: string
-    private gas: number
+    private gas: number = 0.00001
+    private gas_price: string
     private payer: Address
 
     constructor(
@@ -24,6 +26,9 @@ class Transaction {
         value: number,
         type: TransactionType,
         unit: CoinUnit,
+        gas: number,
+        gas_price: string,
+        payer: string,
         data: any
     ) {
         this.block_id = block_id
@@ -32,12 +37,25 @@ class Transaction {
         this.to = to
         this.unit = unit
         this.type = type
-        this.create_at = new Date().getTime()
         this.data = data
+        this.gas_price = gas_price
+        this.create_at = new Date().getTime()
+        this.hash = this.gen_hash()
+        this.gas = gas
+        this.address = m_address(64)
+        this.payer = payer
     }
 
     get _type() {
         return this.type
+    }
+
+    gen_hash(): string {
+        const info = this._info
+        delete info['hash']
+        const zip = JSON.stringify(info)
+        const hash = CryptoJS.SHA256(zip).toString()
+        return hash
     }
 
     get _payer() {
@@ -102,6 +120,10 @@ class Transaction {
 
     set _gas(gas: number) {
         this.gas = gas
+    }
+
+    get _gas_price() {
+        return this.gas_price
     }
 
     get _info(): TransactionInfo {

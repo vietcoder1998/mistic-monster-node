@@ -1,6 +1,6 @@
 import { StoreSymbol } from '../enums'
 import { ContractInfo } from '../typings'
-import { add, get, set, total } from './base'
+import { add, get, set, total } from '.'
 
 async function get_contract_len() {
     return await total(StoreSymbol.contracts)

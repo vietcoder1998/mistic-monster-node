@@ -1,4 +1,4 @@
-declare function address(length: number): string;
+declare function m_address(length: number): string;
 declare function random_hash(length: number): string;
-declare type Address = ReturnType<typeof address>;
-export { address, Address, random_hash };
+declare type Address = ReturnType<typeof m_address>;
+export { m_address, Address, random_hash };

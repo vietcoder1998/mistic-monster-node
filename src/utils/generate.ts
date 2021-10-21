@@ -1,4 +1,7 @@
 import { MonsterStats } from '../typings/monster'
+import { generateMnemonic, mnemonicToSeedSync } from 'bip39'
+import CryptoJS from 'crypto-js'
+import { random_hash } from './address'
 
 function random_id(value: number, range: number) {
     return (value | 0) + Math.floor(Math.random() * (range | 0))
@@ -45,4 +48,38 @@ function generate_stats(
     return stats
 }
 
-export { random_id, create_stats, generate_stats }
+function generate_public_private_key(password: string): {
+    address: string
+    private_key: string
+    seed: string
+} {
+    try {
+        const words = password + random_hash(12)
+
+        // rent private_key from password
+        const private_key = mnemonicToSeedSync(words).toString('hex')
+
+        // convert private key to binary
+        const strength = Number(Buffer.from(private_key).toString('binary'))
+
+        // generate seed to save into client
+        const seed = generateMnemonic(strength)
+
+        // zip public_key into address
+        const public_key = CryptoJS.SHA256(private_key).toString(
+            CryptoJS.enc.Hex
+        )
+        const address = 'mmc' + public_key
+
+        return {
+            address,
+            private_key,
+            seed,
+        }
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export { random_id, create_stats, generate_stats, generate_public_private_key }

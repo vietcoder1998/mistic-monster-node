@@ -10,7 +10,10 @@ const hlenAsync = promisify(client.hlen).bind(client)
 const lpushAsync = promisify(client.lpush).bind(client)
 const hmsetAsync = promisify(client.hmset).bind(client)
 const delAsync = promisify(client.del).bind(client)
-const lrange = promisify(client.lrange).bind(client)
+const lrangeAsync = promisify(client.lrange).bind(client)
+const hmgetAsync = promisify(client.hmget).bind(client)
+const rpushAsync = promisify(client.rpush).bind(client)
+const hexistsAsync = promisify(client.hexists).bind(client)
 
 export {
     hgetAsync,
@@ -21,5 +24,8 @@ export {
     lpushAsync,
     hmsetAsync,
     delAsync,
-    lrange,
+    lrangeAsync,
+    hmgetAsync,
+    rpushAsync,
+    hexistsAsync,
 }

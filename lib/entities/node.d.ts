@@ -1,35 +1,19 @@
-import { CoinUnit, TransactionType } from '../enums/type';
-import { BlockInfo } from '../typings/info';
 declare class MMCNode {
     private id;
-    private address;
+    private host;
     private port;
-    private private_key;
     private name;
-    private level;
-    private txs;
-    private blocks;
-    private last_block;
-    constructor(id: number, address: string, port: number, name: string, private_key: string);
-    get _address(): string;
-    get _last_block(): BlockInfo;
-    set _last_block(block: BlockInfo);
+    constructor(id: string, host: string, port: number, name: string);
+    get _host(): string;
     get _port(): number;
-    get _private_key(): string;
-    get _id(): number;
+    get _id(): string;
     get _name(): string;
-    get _level(): number;
     get _info(): {
-        address: string;
+        host: string;
         port: number;
-        id: number;
+        id: string;
         name: string;
-        level: number;
     };
-    get _last_transaction(): {};
-    change_key(last_key: string, new_key: string): "Success" | "Error Key";
-    create_transaction(from: string, to: string, value: number, unit: CoinUnit, type: TransactionType, data: string): void;
-    create_block(): BlockInfo;
-    is_validate_hash(): boolean;
+    get _address(): string;
 }
 export default MMCNode;

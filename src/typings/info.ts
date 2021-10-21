@@ -1,4 +1,9 @@
-import { AccountType, CoinUnit, TransactionType } from '../enums/type'
+import {
+    AccountType,
+    CoinUnit,
+    TransactionType,
+    TransactionState,
+} from '../enums/type'
 import { Address } from '../utils/address'
 
 type TransactionInfo = {
@@ -19,15 +24,30 @@ type TransactionInfo = {
 type AccountInfo = {
     name: string
     address: Address
-    txs_hash: string[]
     monster_hash: string[]
     coin: Record<CoinUnit, number>
     type: AccountType
     create_at: number
 }
 
+type ShortAccountInfo = {
+    name: string
+    address: Address
+    coin: Record<CoinUnit, number>
+    txs: string[]
+}
+
+type ShotTransactionInfo = {
+    address: Address
+    unit: CoinUnit
+    value: number
+    create_at: number
+    state: TransactionState
+}
+
 type NodeInfo = {
     address: string
+    host: string
     port: number
     id: number
     name: string
@@ -44,20 +64,20 @@ type ContractInfo = {
 }
 
 type BlockInfo = {
-    id: number
+    height: number
     rule: number
     create_at: number
     last_hash: string
     hash: string
     txs: string[]
     proof: number
-    node_id: number
+    node_address: string
 }
 
 type WalletInfo = {
     address: string
     name: string
-    accounts: string[]
+    accounts: ShortAccountInfo[]
     txs_hash: string[]
     create_at: number
 }
@@ -69,4 +89,6 @@ export {
     AccountInfo,
     WalletInfo,
     ContractInfo,
+    ShortAccountInfo,
+    ShotTransactionInfo,
 }

@@ -1,11 +1,12 @@
 import { AccountInfo } from '..'
 import { AccountType, CoinUnit } from '../enums/type'
+import { ShortAccountInfo, ShotTransactionInfo } from '../typings/info'
 import { Address } from '../utils/address'
 
 export default class Account {
     private name: string
     private address: Address
-    private txs_hash: string[] = []
+    private txs: string[] = []
     private monster_hash: string[] = []
     private coin: Record<CoinUnit, number> = {
         [CoinUnit.Monster]: 0,
@@ -15,7 +16,7 @@ export default class Account {
     private type: AccountType
     private create_at: number
 
-    constructor(address: string, name: string, type: AccountType) {
+    constructor(address: Address, name: string, type: AccountType) {
         this.address = address
         this.name = name
         this.type = type
@@ -62,27 +63,31 @@ export default class Account {
         return this.coin
     }
 
-    get _txs_hash() {
-        return this.txs_hash
-    }
-
     push_coin(unit: CoinUnit, value: number) {
         this.coin[unit] = value
     }
 
-    add_transaction(hash: string) {
-        this.txs_hash.push(hash)
+    add_transaction(tx: string) {
+        this.txs.push(tx)
     }
 
     get _info(): AccountInfo {
         return {
             address: this._address,
             name: this._name,
-            txs_hash: this._txs_hash,
             monster_hash: this._monster_hash,
             coin: this._coin,
             type: this._type,
             create_at: this._create_at,
+        }
+    }
+
+    get _short_info(): ShortAccountInfo {
+        return {
+            name: this._name,
+            address: this._address,
+            coin: this._coin,
+            txs: this.txs,
         }
     }
 }
