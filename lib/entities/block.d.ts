@@ -12,7 +12,6 @@ export default class Block {
     set _rule(rule: number);
     get _hash(): string;
     get _height(): number;
-    get _info(): BlockInfo;
     get _node_address(): string;
     set _node_address(node_address: string);
     get _all_transaction_info(): string[];
@@ -22,4 +21,5 @@ export default class Block {
         hash: string;
     };
     is_valid_hash(hash: string): boolean;
+    get _info(): BlockInfo;
 }

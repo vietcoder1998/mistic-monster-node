@@ -30,6 +30,7 @@ import Wallet from './wallet'
 import rp from 'request-promise-native'
 
 export default class BlockChain {
+    provider = 'http://localhost:8093'
     constructor() {}
 
     async _total_tx() {
@@ -104,14 +105,12 @@ export default class BlockChain {
 
         const node: NodeInfo = (await get_node_detail(node_address))?.data
 
-        if (!node) {
+        if (!node && this.provider) {
             return {
                 code: Code.not_found,
                 msg: 'node is required',
             }
         }
-
-        console.log(node)
 
         const block = new Block(
             last_block ? Number(last_block.height) + 1 : 0,
@@ -168,36 +167,6 @@ export default class BlockChain {
         }
     }
 
-    // validate block
-    async validate_block(
-        block_info: BlockInfo,
-        address: string,
-        private_key: string
-    ) {
-        const last_block: BlockInfo = (
-            await take_last<BlockInfo>(StoreSymbol.blocks)
-        )?.data
-
-        if (
-            last_block &&
-            block_info &&
-            this.compare_hash(
-                block_info.hash,
-                block_info.proof,
-                last_block.hash
-            )
-        ) {
-            return {
-                code: Code.success,
-            }
-        }
-
-        return {
-            code: Code.error_block,
-        }
-        
-    }
-
     async add_block(block: BlockInfo) {
         return await push_block(block)
     }
@@ -227,9 +196,15 @@ export default class BlockChain {
         if (!node) {
             return { code: Code.not_found, msg: Message.not_found }
         }
-        
+
         if (!last_block && block.height > last_block.height) {
-            return await this.add_block(block)
+            const res = await this.add_block(block)
+            
+            if (res) {
+                return {
+                    code: Code.success,
+                }
+            }
         }
 
         return {

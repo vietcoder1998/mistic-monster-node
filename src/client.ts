@@ -5,6 +5,7 @@ import { Node } from './entities'
 
 const mmc_chain = new BlockChain()
 const app = express()
+const port = 8092
 
 app.use(bodyParser.json())
 
@@ -54,7 +55,7 @@ app.get('/block/:height', async (req, res) => {
     res.send(await mmc_chain.get_block_detail(Number(height)))
 })
 
-/// call transaction => mmc.transaction.get_account(private_key , address)
+// call transaction => mmc.transaction.get_account(private_key , address)
 app.get('/tx/:hash', async (req, res) => {
     const {
         params: { hash },
@@ -97,6 +98,8 @@ app.get('/mine', async (req, res) => {
     res.send(await mmc_chain.mine_block(String(node_address), String(address)))
 })
 
+
+// register node
 app.post('/node/register', async (req, res) => {
     const {
         body: { port, host, name },
@@ -143,10 +146,6 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
     next()
 })
 
-app.listen(8092, () => {
-    console.log('server running, ', `http://localhost:${8092}`)
-})
-
-app.listen(8093, () => {
-    console.log('server running, ', `http://localhost:${8093}`)
+app.listen(port, () => {
+    console.log('server running, ', `http://localhost:${port}`)
 })

@@ -1,37 +1,13 @@
 import { Block } from '.';
-import { Code } from '../enums';
+import { Code, Message } from '../enums';
 import { BlockInfo, NodeInfo, TransactionInfo } from '../typings/info';
 import Transaction from './transaction';
 export default class BlockChain {
+    provider: string;
     constructor();
-    _total_tx(): Promise<{
-        code: Code;
-        total: number;
-    } | {
-        code: Code;
-        total?: undefined;
-    }>;
-    _total_nodes(): Promise<{
-        code: Code;
-        total: number;
-    } | {
-        code: Code;
-        total?: undefined;
-    }>;
-    _total_account(): Promise<{
-        code: Code;
-        total: number;
-    } | {
-        code: Code;
-        total?: undefined;
-    }>;
-    get_total_block(): Promise<{
-        code: Code;
-        total: number;
-    } | {
-        code: Code;
-        total?: undefined;
-    }>;
+    _total_tx(): Promise<number>;
+    _total_account(): Promise<number>;
+    get_total_block(): Promise<number>;
     get_last_block(): Promise<{
         code: Code;
         data: BlockInfo;
@@ -84,51 +60,49 @@ export default class BlockChain {
         block: Block;
         tx: Transaction;
         code: Code;
-        msg: string;
+        msg?: string;
         data?: string;
-        address?: undefined;
-        add_list?: undefined;
+        address: string;
     } | {
         block: Block;
         tx: Transaction;
         code: Code;
         msg: string;
         data?: string;
-        address: string;
-        add_list: any;
-    }>;
-    validate_block(block_info: BlockInfo, address: string, private_key: string): Promise<{
+        address?: undefined;
+    } | {
         code: Code;
+        msg?: undefined;
     }>;
     add_block(block: BlockInfo): Promise<{
         code: Code;
-        msg: string;
-        address?: undefined;
-        add_list?: undefined;
+        address: string;
+        msg?: undefined;
     } | {
         code: Code;
-        address: string;
-        add_list: any;
-        msg?: undefined;
+        msg: string;
+        address?: undefined;
     }>;
     get_list_block(page: number, size: number): Promise<{
         code?: Code;
         data?: BlockInfo[];
+        total?: number;
+        start?: number;
+        end?: number;
     }>;
     get_list_txs(page: number, size: number): Promise<{
         code?: Code;
         data?: TransactionInfo[];
+        total?: number;
+        start?: number;
+        end?: number;
     }>;
     create_account(address: string, name: string, private_key: string): Promise<any>;
     resolve_block(block: BlockInfo, address: string): Promise<{
         code: Code;
-        msg: string;
-        address?: undefined;
-        add_list?: undefined;
+        msg: Message;
     } | {
         code: Code;
-        address: string;
-        add_list: any;
         msg?: undefined;
     }>;
     get_wallet_detail(address: string, private_key: string): Promise<{
@@ -138,37 +112,42 @@ export default class BlockChain {
     }>;
     create_tx(tx: TransactionInfo): Promise<{
         code: Code;
-        msg: string;
+        msg?: string;
         data?: string;
-        address?: undefined;
-        add_list?: undefined;
+        address: string;
     } | {
         code: Code;
         msg: string;
         data?: string;
-        address: string;
-        add_list: any;
+        address?: undefined;
     }>;
     register_node(node: NodeInfo): Promise<{
         code: Code;
-        msg: string;
-        address?: undefined;
-        add_list?: undefined;
+        address: string;
+        msg?: undefined;
     } | {
         code: Code;
-        address: string;
-        add_list: any;
-        msg?: undefined;
+        msg: string;
+        address?: undefined;
+    } | {
+        code: Code;
     }>;
     add_node(node: NodeInfo): Promise<{
         code: Code;
-        msg: string;
-        address?: undefined;
-        add_list?: undefined;
+        address: string;
+        msg?: undefined;
     } | {
         code: Code;
-        address: string;
-        add_list: any;
-        msg?: undefined;
+        msg: string;
+        address?: undefined;
+    } | {
+        code: Code;
+    }>;
+    get_price_of_account(address: string): Promise<{
+        code: Code;
+        txs?: undefined;
+    } | {
+        code: Code;
+        txs: TransactionInfo[];
     }>;
 }
