@@ -1,10 +1,13 @@
+import { NodeInfo } from '..'
+
 class MMCNode {
-    private id: string
+    private id: number
     private host: string
     private port: number
     private name: string
+    private txs_len: number
 
-    constructor(id: string, host: string, port: number, name: string) {
+    constructor(id: number, host: string, port: number, name: string) {
         this.id = id
         this.host = host
         this.port = port
@@ -27,17 +30,19 @@ class MMCNode {
         return this.name
     }
 
-    get _info() {
+    get _info(): NodeInfo {
         return {
             host: this.host,
             port: this.port,
             id: this.id,
+            txs_len: this.txs_len,
             name: this.name,
+            address: this._address,
         }
     }
 
     get _address() {
-        return this.host + this.port
+        return `${this.host}:${this.port}`
     }
 }
 

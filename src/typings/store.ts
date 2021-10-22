@@ -17,7 +17,7 @@ type ContractStore = {
 }
 
 type NodeStore = {
-    
+    [key: string]: string
 }
 
 export { BlockStore, WalletStore, TransactionStore, ContractStore, NodeStore }

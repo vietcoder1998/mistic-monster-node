@@ -33,19 +33,6 @@ export default class Block {
         return this.height
     }
 
-    get _info(): BlockInfo {
-        return {
-            height: this.height,
-            rule: this.rule,
-            create_at: this.create_at,
-            proof: this.proof,
-            hash: this.hash,
-            last_hash: this.last_hash,
-            txs: this._all_transaction_info,
-            node_address: this.node_address,
-        }
-    }
-
     get _node_address() {
         return this.node_address
     }
@@ -71,7 +58,6 @@ export default class Block {
             hash = crypto.SHA256(random_string).toString()
 
             if (this.is_valid_hash(hash)) {
-                console.log('eroka ->', hash)
                 invalid = false
                 this.proof = proof
             } else proof += 1
@@ -82,10 +68,22 @@ export default class Block {
 
     is_valid_hash(hash: string): boolean {
         if (hash) {
-            console.log('hash ->', hash)
             if (hash.substr(0, 1) == '0') return true
         }
 
         return false
+    }
+
+    get _info(): BlockInfo {
+        return {
+            height: this.height,
+            rule: this.rule,
+            create_at: this.create_at,
+            proof: this.proof,
+            hash: this.hash,
+            last_hash: this.last_hash,
+            txs: this._all_transaction_info,
+            node_address: this.node_address,
+        }
     }
 }

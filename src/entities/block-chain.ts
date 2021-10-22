@@ -1,7 +1,12 @@
 import { Block } from '.'
 import { Account } from '..'
-import { get_arr, take_last, total } from '../db'
-import { add_account, add_tx_to_account, is_exist_account } from '../db/account'
+import { take_last, total } from '../db'
+import {
+    add_account,
+    add_tx_to_account,
+    get_price_of_account,
+    is_exist_account,
+} from '../db/account'
 import {
     get_block_detail,
     get_last_block,
@@ -22,16 +27,13 @@ import { m_address } from '../utils'
 import { generate_public_private_key } from '../utils/generate'
 import Transaction from './transaction'
 import Wallet from './wallet'
+import rp from 'request-promise-native'
 
 export default class BlockChain {
     constructor() {}
 
     async _total_tx() {
         return await total(StoreSymbol.txs)
-    }
-
-    async _total_nodes() {
-        return await total(StoreSymbol.nodes)
     }
 
     async _total_account() {
@@ -47,12 +49,7 @@ export default class BlockChain {
     }
 
     async get_block_detail(height: number) {
-        const data = await get_block_detail(String(height))
-        console.log(
-            '🚀 ~ file: block-chain.ts ~ line 52 ~ BlockChain ~ get_block ~ data',
-            data
-        )
-        return data
+        return await get_block_detail(String(height))
     }
 
     async get_tx_detail(hash: string) {
@@ -91,13 +88,12 @@ export default class BlockChain {
         return false
     }
 
+    // mine_block
     async mine_block(node_address: string, address: string) {
         const last_block: BlockInfo = (
             await take_last<BlockInfo>(StoreSymbol.blocks)
         )?.data
-
         const sender = await is_exist_account(address)
-        console.log('sender ->', sender)
 
         if (!sender) {
             return {
@@ -106,13 +102,24 @@ export default class BlockChain {
             }
         }
 
+        const node: NodeInfo = (await get_node_detail(node_address))?.data
+
+        if (!node) {
+            return {
+                code: Code.not_found,
+                msg: 'node is required',
+            }
+        }
+
+        console.log(node)
+
         const block = new Block(
             last_block ? Number(last_block.height) + 1 : 0,
             node_address,
             last_block?.hash || ''
         )
 
-        if (block._info.proof > last_block.proof) {
+        if (!last_block || block._info.height > last_block.height) {
             const tx = new Transaction(
                 block._height,
                 '0',
@@ -127,27 +134,45 @@ export default class BlockChain {
             )
 
             block.push_transaction(tx._address)
-            const add_block_result = await this.add_block(block._info)
-            const add_tx_result = await add_tx_to_account(tx._hash, tx._to)
 
-            return {
-                ...add_block_result,
-                ...add_tx_result,
-                block,
-                tx,
+            const resolve = await rp(`http://${node.address}/node/resolve`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application-json',
+                },
+                body: String(block._info),
+            })
+
+            if (resolve) {
+                const result = await this.add_block(block._info)
+                const result1 = await add_tx(tx._info)
+                const result2 = await add_tx_to_account(tx._to, tx._address)
+
+                return {
+                    ...result,
+                    ...result1,
+                    ...result2,
+                    block,
+                    tx,
+                }
+            } else {
+                return {
+                    code: Code.error,
+                }
             }
-        } 
+        }
 
         return {
             code: Code.error_block,
-            msg: 'block is lower than error block'
+            msg: 'block is lower than error block',
         }
     }
 
+    // validate block
     async validate_block(
         block_info: BlockInfo,
         address: string,
-        private_key: string,
+        private_key: string
     ) {
         const last_block: BlockInfo = (
             await take_last<BlockInfo>(StoreSymbol.blocks)
@@ -166,9 +191,11 @@ export default class BlockChain {
                 code: Code.success,
             }
         }
+
         return {
             code: Code.error_block,
         }
+        
     }
 
     async add_block(block: BlockInfo) {
@@ -185,6 +212,7 @@ export default class BlockChain {
 
     async create_account(address: string, name: string, private_key: string) {
         const account = new Account(m_address(64), name, AccountType.USER)
+
         return await add_account_to_wallet(
             account._short_info,
             address,
@@ -193,18 +221,20 @@ export default class BlockChain {
     }
 
     async resolve_block(block: BlockInfo, address: string) {
-        const last_block = (await get_last_block()).data
-        const node = (await get_node_detail(address)).data
+        const last_block = (await get_last_block())?.data
+        const node = (await get_node_detail(address))?.data
 
         if (!node) {
             return { code: Code.not_found, msg: Message.not_found }
-        } else if (!last_block && block.proof > last_block.proof) {
+        }
+        
+        if (!last_block && block.height > last_block.height) {
             return await this.add_block(block)
-        } else {
-            return {
-                code: Code.error_block,
-                msg: Message.block_err,
-            }
+        }
+
+        return {
+            code: Code.error_block,
+            msg: Message.block_err,
         }
     }
 
@@ -222,5 +252,9 @@ export default class BlockChain {
 
     async add_node(node: NodeInfo) {
         return await register_node(node)
+    }
+
+    async get_price_of_account(address: string) {
+        return await get_price_of_account(address)
     }
 }

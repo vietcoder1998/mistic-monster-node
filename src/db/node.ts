@@ -1,17 +1,16 @@
 import { NodeInfo } from '..'
-import { StoreSymbol } from '../enums'
+import { Code, StoreSymbol } from '../enums'
 import { add, get, set, total } from '.'
 
-async function get_node_len() {
-    return await total(StoreSymbol.nodes)
-}
+async function register_node(node: NodeInfo, is_parent?: boolean) {
+    const len = await total(StoreSymbol.node)
 
-async function get_node_detail(address: string) {
-    return await get<NodeInfo>(StoreSymbol.nodes, address)
-}
-
-async function register_node(node: NodeInfo) {
-    return await add<NodeInfo>(StoreSymbol.txs, String(node.id), node)
+    if (len < 3) {
+        return add<NodeInfo>(StoreSymbol.node, String(node.address), node)
+    } else
+        return {
+            code: Code.full_node,
+        }
 }
 
 async function update_node(node: NodeInfo) {
@@ -19,9 +18,13 @@ async function update_node(node: NodeInfo) {
 
     if (!result || !result.data) {
         return result
-    } else {
-        return await set<NodeInfo>(StoreSymbol.txs, String(node.id), node)
     }
+
+    return await set<NodeInfo>(StoreSymbol.txs, String(node.id), node)
 }
 
-export { get_node_len, get_node_detail, register_node, update_node }
+async function get_node_detail(address: string) {
+    return await get<NodeInfo>(StoreSymbol.node, address)
+}
+
+export { register_node, update_node, get_node_detail }

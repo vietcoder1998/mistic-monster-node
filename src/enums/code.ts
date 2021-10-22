@@ -10,6 +10,10 @@ enum Code {
     hash_error = -7,
     push_ql_error = -8,
     push_arr_error = -9,
+    get_multi_error = -10,
+    txs_not_found = -11,
+    address_not_found = -12,
+    full_node = -13,
 }
 
 export { Code }

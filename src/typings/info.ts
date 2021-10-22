@@ -51,7 +51,7 @@ type NodeInfo = {
     port: number
     id: number
     name: string
-    transaction_length: number
+    txs_len: number
 }
 
 type ContractInfo = {

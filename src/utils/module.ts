@@ -15,7 +15,6 @@ function encode<T>(data: T, private_key?: string): string {
 }
 
 function decode<T>(data: string, private_key?: string): T {
-    console.log('🚀 ~ file: module.ts ~ line 18 ~ data', data, private_key)
     try {
         if (private_key) {
             const output = CryptoJS.AES.decrypt(data, private_key).toString(

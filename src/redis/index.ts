@@ -7,6 +7,7 @@ const hsetAsync = promisify(client.hset).bind(client)
 const hgetallAsync = promisify(client.hgetall).bind(client)
 const flushAsync = promisify(client.flushall).bind(client)
 const hlenAsync = promisify(client.hlen).bind(client)
+const llenAsync = promisify(client.llen).bind(client)
 const lpushAsync = promisify(client.lpush).bind(client)
 const hmsetAsync = promisify(client.hmset).bind(client)
 const delAsync = promisify(client.del).bind(client)
@@ -28,4 +29,5 @@ export {
     hmgetAsync,
     rpushAsync,
     hexistsAsync,
+    llenAsync,
 }

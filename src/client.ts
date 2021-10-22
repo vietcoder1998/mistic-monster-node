@@ -2,11 +2,9 @@ import bodyParser from 'body-parser'
 import express, { NextFunction, Request, Response } from 'express'
 import { BlockChain } from '.'
 import { Node } from './entities'
-import { random_hash } from './utils'
 
 const mmc_chain = new BlockChain()
 const app = express()
-const port = 8092
 
 app.use(bodyParser.json())
 
@@ -37,6 +35,16 @@ app.post('/wallet/:address', async (req, res) => {
     res.send(wallet)
 })
 
+// get tx price
+app.get('/tx-price/:address', async (req, res) => {
+    const {
+        params: { address },
+    } = req
+    const result = await mmc_chain.get_price_of_account(address)
+
+    res.send(result)
+})
+
 // get block
 app.get('/block/:height', async (req, res) => {
     const {
@@ -55,15 +63,29 @@ app.get('/tx/:hash', async (req, res) => {
     res.send(await mmc_chain.get_tx_detail(String(hash)))
 })
 
-app.post('/tx', async (req, res) => {
+// get list tx
+app.get('/tx', async (req, res) => {
     const {
-        headers: { pk, aa },
-        body: { tx, pw },
+        query: { page, size },
     } = req
+
+    res.send(await mmc_chain.get_list_txs(Number(page), Number(size)))
 })
 
-app.get('/nodes/resolve', (req, res) => {
-    res.send()
+// node resolve
+app.post('/node/resolve', async (req, res) => {
+    const {
+        body,
+        query: { address },
+    } = req
+
+    if (!String(address) || String(body)) {
+        res.send('address are error')
+    } else {
+        res.send(
+            await mmc_chain.resolve_block(JSON.parse(body), String(address))
+        )
+    }
 })
 
 // mine block
@@ -75,20 +97,18 @@ app.get('/mine', async (req, res) => {
     res.send(await mmc_chain.mine_block(String(node_address), String(address)))
 })
 
-
-app.get('/nodes/register', async (req, res) => {
+app.post('/node/register', async (req, res) => {
     const {
         body: { port, host, name },
     } = req
 
-    const node = new Node(
-        random_hash(12),
-        String(host),
-        Number(port),
-        String(name)
-    )
+    if (!port || !host || !name) {
+        res.send('body error')
+    } else {
+        const node = new Node(1, String(host), Number(port), String(name))
 
-    res.send(node._info)
+        res.send(await mmc_chain.register_node(node._info))
+    }
 })
 
 app.get('/block', async (req, res) => {
@@ -123,6 +143,10 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
     next()
 })
 
-app.listen(port, () => {
-    console.log('server running, ', `http://localhost:${port}`)
+app.listen(8092, () => {
+    console.log('server running, ', `http://localhost:${8092}`)
+})
+
+app.listen(8093, () => {
+    console.log('server running, ', `http://localhost:${8093}`)
 })

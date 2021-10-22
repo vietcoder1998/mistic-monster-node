@@ -6,15 +6,13 @@ import {
     hlenAsync,
     hmgetAsync,
     hsetAsync,
+    llenAsync,
     lrangeAsync,
     rpushAsync,
 } from '../redis'
 import { decode, encode } from '../utils'
 
-async function append(
-    symbol: StoreSymbol,
-    address: string | string[],
-) {
+async function append(symbol: StoreSymbol, address: string | string[]) {
     try {
         const result = await hsetAsync(symbol, address, JSON.stringify([]))
         return {
@@ -30,36 +28,34 @@ async function append(
     }
 }
 
-
 async function is_exist(symbol: StoreSymbol, address: string | string[]) {
     try {
         return await hexistsAsync(symbol, address)
-        
     } catch (error) {
         console.log(error)
         return {
-            code: Code.error
+            code: Code.error,
         }
     }
 }
+
 async function push<T>(
     symbol: StoreSymbol,
     address: string,
     value: T
-): Promise<{ code: Code; msg: string; data?: T }> {
+): Promise<{ code: Code; msg?: string; data?: T }> {
     try {
         const data = await rpushAsync(`${symbol}.${address}`, value)
 
         return {
-            code: Code.push_arr_error,
-            msg: `push ${symbol} error`,
+            code: Code.success,
             data,
         }
     } catch (error) {
         console.log(error)
         return {
             code: Code.request_err,
-            msg: 'can`t add ' + symbol,
+            msg: 'can`t push ' + symbol,
         }
     }
 }
@@ -72,19 +68,11 @@ async function add<T>(
 ) {
     try {
         await hsetAsync(symbol, address, encode<T>(value, private_key))
-        const add_list = await rpushAsync(`${symbol}.ql`, address)
-
-        if (!add_list) {
-            return {
-                code: Code.push_ql_error,
-                msg: `add ${symbol} error`,
-            }
-        }
+        await rpushAsync(`${symbol}.ql`, address)
 
         return {
             code: Code.success,
             address,
-            add_list,
         }
     } catch (error) {
         console.log(error)
@@ -96,13 +84,24 @@ async function add<T>(
 }
 
 async function get_arr<T>(symbol: StoreSymbol, address: string) {
-    const len = await hlenAsync(`${symbol}.${address}`)
-    const data: T = await lrangeAsync(`${symbol}.${address}`, 0, len | 0)
+    try {
+        const len = await llenAsync(`${symbol}.${address}`)
+        const data: T = await lrangeAsync(
+            `${symbol}.${address}`,
+            0,
+            (len - 1) | 0
+        )
 
-    return {
-        code: Code.success,
-        data,
-        len
+        return {
+            code: Code.success,
+            data,
+            len,
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            code: Code.request_err,
+        }
     }
 }
 async function get<T>(
@@ -136,7 +135,6 @@ async function take_last<T>(symbol: StoreSymbol, private_key?: string) {
     try {
         const last_index = await lrangeAsync(`${symbol}.ql`, -1, -1)
 
-        console.log(last_index)
         if (last_index[0]) {
             const data = decode<T>(
                 await hgetAsync(symbol, last_index),
@@ -238,9 +236,50 @@ async function get_by_index<T>(
 async function total(symbol: StoreSymbol) {
     try {
         const total: number = await hlenAsync(symbol)
+        return total
+    } catch (error) {
+        throw error
+    }
+}
+
+async function query<T>(
+    symbol: StoreSymbol,
+    page: number,
+    size: number
+): Promise<{
+    code?: Code
+    data?: T[]
+    total?: number
+    start?: number
+    end?: number
+}> {
+    try {
+        const total = await hlenAsync(`${symbol}`)
+        const start = (page || 0) * size
+        const end = (page || 0) * (size || 10) + (size || 10)
+        const query_list: string[] = await lrangeAsync(
+            `${symbol}.ql`,
+            start >= total ? total - 1 : start,
+            end >= total ? total - 1 : end - 1
+        )
+        const result: string[] = await hmgetAsync(`${symbol}`, ...query_list)
+
+        if (result && result.length > 0) {
+            const data: T[] = result?.map((e: string) => JSON.parse(e))
+
+            return {
+                code: Code.success,
+                total,
+                start,
+                end,
+                data,
+            }
+        }
+
         return {
             code: Code.success,
             total,
+            data: [],
         }
     } catch (error) {
         console.log(error)
@@ -250,22 +289,13 @@ async function total(symbol: StoreSymbol) {
     }
 }
 
-async function query<T>(
+async function get_multi<T>(
     symbol: StoreSymbol,
-    start: number,
-    end: number
-): Promise<{ code?: Code; data?: T[] }> {
+    addresses?: string[]
+): Promise<{ code: Code; msg?: string; data?: T[] }> {
     try {
-        const query_list: string[] = await lrangeAsync(
-            `${symbol}.ql`,
-            start || 0,
-            end || 10
-        )
-        const data: T[] = await hmgetAsync(
-            `${symbol}`,
-            ...query_list.map((it) => JSON.parse(it))
-        )
-
+        const data = hmgetAsync(symbol, ...addresses)
+        console.log('data')
         return {
             code: Code.success,
             data,
@@ -273,7 +303,8 @@ async function query<T>(
     } catch (error) {
         console.log(error)
         return {
-            code: Code.unknown,
+            code: Code.get_multi_error,
+            msg: `error in get multi ${symbol}`,
         }
     }
 }
@@ -292,4 +323,5 @@ export {
     append,
     get_arr,
     is_exist,
+    get_multi,
 }
